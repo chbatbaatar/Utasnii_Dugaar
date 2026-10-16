@@ -1,30 +1,30 @@
 <!DOCTYPE html>
 <html lang="mn"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Алтангадас одонт ЕБ-ын I сургуулийн багш ажилчдын дугаар</title>
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#14307f"><title>Алтангадас одонт ЕБ-ын I сургуулийн багш ажилчдын дугаар</title>
 <style>
-:root{--bg:#f4f6fb;--card:#fff;--tx:#1b2333;--mu:#667089;--bd:#e3e8f2;--ac:#2f5bea;--ac2:#e8eeff;--ok:#12a150;--dn:#d92d20;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141f;--card:#182030;--tx:#eaf0ff;--mu:#97a3bd;--bd:#26304a;--ac:#6b8cff;--ac2:#1f2b4d}}
-:root[data-theme="dark"]{--bg:#0f141f;--card:#182030;--tx:#eaf0ff;--mu:#97a3bd;--bd:#26304a;--ac:#6b8cff;--ac2:#1f2b4d}
+:root{--bg:#f4f6fb;--card:#fff;--tx:#1b2333;--mu:#667089;--bd:#e3e8f2;--ac:#1f45c4;--or:#f58220;--ac2:#e8eeff;--ok:#12a150;--dn:#d92d20;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141f;--card:#182030;--tx:#eaf0ff;--mu:#97a3bd;--bd:#26304a;--ac:#7c9bff;--or:#ff9a3d;--ac2:#1f2b4d}}
+:root[data-theme="dark"]{--bg:#0f141f;--card:#182030;--tx:#eaf0ff;--mu:#97a3bd;--bd:#26304a;--ac:#7c9bff;--or:#ff9a3d;--ac2:#1f2b4d}
 *{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-header{background:linear-gradient(135deg,#1e3fae,#3b6cf5 60%,#6a8dff);color:#fff;padding:18px 16px 56px}
+header{background:linear-gradient(135deg,#14307f,#2347b8 55%,#3d6ae8);color:#fff;padding:14px 16px 56px;border-bottom:5px solid var(--or)}
 .w{max-width:960px;margin:0 auto}
 h1{font-size:19px;margin:0 0 4px;line-height:1.25}
 .sub{opacity:.85;font-size:13px}
 .top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .btn{border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:8px 12px;border-radius:10px;font:inherit;cursor:pointer}
-.btn.p{background:var(--ac);color:#fff;border-color:var(--ac)}.btn.d{color:var(--dn)}
+.btn.p{background:var(--or);color:#fff;border-color:var(--or)}.btn.d{color:var(--dn)}
 .top .btn{background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.35);white-space:nowrap}
 .stats{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-.stat{background:rgba(255,255,255,.16);border-radius:10px;padding:6px 12px;font-size:13px}
+.stat{background:rgba(255,255,255,.16);border:0;color:#fff;font:inherit;border-radius:10px;padding:8px 14px;font-size:14px}button.stat{cursor:pointer;border-bottom:3px solid var(--or)}
 .panel{margin-top:-38px;padding:0 12px}
 .box{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px;box-shadow:0 6px 20px rgba(20,30,60,.08)}
 input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit}
 .row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}.row>*{flex:1;min-width:120px}
 .chips{display:flex;gap:6px;overflow-x:auto;padding:10px 0 2px;scrollbar-width:thin}
-.chip{flex:none;border:1px solid var(--bd);background:var(--bg);color:var(--tx);padding:6px 11px;border-radius:99px;cursor:pointer;font-size:13px;white-space:nowrap}
-.chip.on{background:var(--ac);color:#fff;border-color:var(--ac)}.chip small{opacity:.7;margin-left:3px}
+.chip{flex:none;border:1px solid var(--bd);background:var(--bg);color:var(--tx);padding:11px 18px;border-radius:99px;cursor:pointer;font-size:16px;font-weight:600;white-space:nowrap}
+.chip.on{background:var(--or);color:#fff;border-color:var(--or)}.chip small{opacity:.7;margin-left:3px}
 main{padding:12px}
 .gh{display:flex;align-items:center;gap:8px;margin:16px 4px 8px;font-weight:700;cursor:pointer}
 .gh i{font-style:normal;background:var(--ac2);color:var(--ac);border-radius:99px;padding:1px 9px;font-size:12px}
@@ -41,8 +41,9 @@ main{padding:12px}
 .mb h3{margin:0 0 10px}.mb label{display:block;font-size:12px;color:var(--mu);margin:8px 0 3px}
 .toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 14px;border-radius:10px;opacity:0;transition:.2s;z-index:30;pointer-events:none}.toast.on{opacity:1}
 .adm{background:var(--ac2);border:1px dashed var(--ac);border-radius:10px;padding:8px;margin-top:8px;display:none;gap:8px;flex-wrap:wrap}.adm.on{display:flex}
+.tt{display:flex;gap:10px;align-items:center}.logo{height:46px;background:#fff;border-radius:10px;padding:5px;flex:none}.back{background:var(--or);color:#fff;border:0;border-radius:99px;padding:9px 18px;font:inherit;font-weight:700;margin-bottom:10px;cursor:pointer}.tile{background:var(--card);border:1px solid var(--bd);border-left:5px solid var(--or);border-radius:14px;padding:16px;cursor:pointer;font-weight:700;font-size:16px;display:flex;justify-content:space-between;gap:8px}.tile small{color:var(--mu);font-weight:500}
 </style></head><body>
-<header><div class="w"><div class="top"><div><h1>Алтангадас одонт ЕБ-ын I сургуулийн багш ажилчдын дугаар</h1><div class="sub">Арвайхээр сум · 2026.10.14-ний жагсаалт</div></div><button class="btn" id="lg">🔒 Админ</button></div>
+<header><div class="w"><button class="back" id="back" hidden>← Буцах</button><div class="top"><div class="tt"><img class="logo" src="logo-sm.png" alt=""><div><h1>Алтангадас одонт ЕБ-ын I сургуулийн багш ажилчдын дугаар</h1><div class="sub">Арвайхээр сум · 2026.10.14-ний жагсаалт</div></div></div><button class="btn" id="lg">🔒 Админ</button></div>
 <div class="stats" id="st"></div></div></header>
 <div class="panel"><div class="w box">
 <input id="q" type="search" placeholder="🔍 Нэр, утас, машины дугаараар хайх...">
@@ -56,7 +57,10 @@ main{padding:12px}
 <div class="mod" id="md"><div class="mb" id="mb"></div></div><div class="toast" id="ts"></div>
 <script>
 const $=s=>document.querySelector(s),KEY='altan_staff_v1',PK='altan_pin_v1';
-let P=[],admin=false,grp='',nid=1;
+let P=[],admin=false,grp='',mode='',nid=1;
+function apply(g,m,f){grp=g;mode=m;$('#fl').value=f;render()}
+function nav(g,m,f){history.pushState({g,m,f},'');apply(g,m,f)}
+window.addEventListener('popstate',e=>{const t=e.state||{g:'',m:'',f:''};apply(t.g,t.m,t.f)});
 const ld=k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}};
 function sv(){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
 function dlj(){const b=new Blob([JSON.stringify(P)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='data.json';document.body.appendChild(a);a.click();a.remove();try{localStorage.removeItem(KEY)}catch(e){}toast('data.json татагдлаа')}
@@ -73,8 +77,10 @@ return (x.n+' '+x.p+' '+x.c+' '+x.g).toLowerCase().includes(q)||x.c.replace(/[\s
 function render(){const q=$('#q').value.trim().toLowerCase(),f=$('#fl').value,so=$('#so').value,vw=$('#vw').value;
 let L=P.filter(x=>(!grp||x.g==grp)&&(!f||(f=='c')==!!x.c)&&mt(x,q));
 if(so=='n')L.sort((a,b)=>a.n.split('.').pop().localeCompare(b.n.split('.').pop(),'mn'));
-$('#st').innerHTML=`<div class="stat">👥 Нийт ${P.length}</div><div class="stat">🏷️ ${G().length} бүлэг</div><div class="stat">🚗 ${P.filter(x=>x.c).length} машин</div><div class="stat">🔎 ${L.length} илэрц</div>`;
+$('#st').innerHTML=`<button class="stat" data-s="all">👥 Нийт ${P.length}</button><button class="stat" data-s="grp">🏷️ ${G().length} бүлэг</button><button class="stat" data-s="car">🚗 ${P.filter(x=>x.c).length} машин</button><div class="stat">🔎 ${L.length} илэрц</div>`;
 $('#ch').innerHTML=`<button class="chip ${grp?'':'on'}" data-g="">Бүгд<small>${P.length}</small></button>`+G().map(g=>`<button class="chip ${grp==g?'on':''}" data-g="${esc(g)}">${esc(g)}<small>${P.filter(x=>x.g==g).length}</small></button>`).join('');
+$('#back').hidden=!(grp||mode||$('#fl').value);
+if(mode=='groups'){$('#ls').innerHTML='<div class="grid">'+G().map(g=>`<div class="tile" data-g="${esc(g)}"><span>${esc(g)}</span><small>${P.filter(x=>x.g==g).length} хүн</small></div>`).join('')+'</div>';return}
 if(!L.length){$('#ls').innerHTML='<div class="empty">Илэрц олдсонгүй</div>';return}
 if(vw=='l'){$('#ls').innerHTML=`<div class="grid">${L.map(card).join('')}</div>`;return}
 $('#ls').innerHTML=G().filter(g=>L.some(x=>x.g==g)).map(g=>{const a=L.filter(x=>x.g==g);return `<div class="gh">${esc(g)} <i>${a.length}</i></div><div class="grid">${a.map(card).join('')}</div>`}).join('')}
@@ -97,7 +103,7 @@ $('#add').onclick=()=>edit();$('#bk').onclick=backup;$('#dj').onclick=dlj;
 $('#pn').onclick=()=>{modal(`<h3>🔑 PIN солих</h3><input id="np" type="password" inputmode="numeric" placeholder="Шинэ PIN"><div class="row"><button class="btn" onclick="close_()">Болих</button><button class="btn p" id="ok">Хадгалах</button></div>`);$('#ok').onclick=()=>{const v=$('#np').value.trim();if(v.length<4)return toast('PIN 4+ тэмдэгт');try{localStorage.setItem(PK,v)}catch(e){}close();toast('PIN солигдлоо')}};
 $('#md').onclick=e=>{if(e.target.id=='md')close()};
 ['q','vw','so','fl'].forEach(i=>$('#'+i).oninput=render);
-document.addEventListener('click',e=>{const t=e.target.closest('[data-g],[data-ed],[data-cp]');if(!t)return;
-if(t.dataset.g!==undefined){grp=t.dataset.g;render()}else if(t.dataset.ed)edit(t.dataset.ed);else{const x=P.find(p=>p.id==t.dataset.cp);try{navigator.clipboard.writeText(x.n+' '+x.p+(x.c?' '+x.c:''));toast('Хуулагдлаа')}catch(e){toast('Хуулж чадсангүй')}}});
+document.addEventListener('click',e=>{const t=e.target.closest('[data-g],[data-ed],[data-cp],[data-s],#back');if(!t)return;
+if(t.id=='back'){if(history.state)history.back();else nav('','','')}else if(t.dataset.s){const k=t.dataset.s;nav('',k=='grp'?'groups':'',k=='car'?'c':'')}else if(t.dataset.g!==undefined){nav(t.dataset.g,'',$('#fl').value)}else if(t.dataset.ed)edit(t.dataset.ed);else{const x=P.find(p=>p.id==t.dataset.cp);try{navigator.clipboard.writeText(x.n+' '+x.p+(x.c?' '+x.c:''));toast('Хуулагдлаа')}catch(e){toast('Хуулж чадсангүй')}}});
 init().then(render);
 </script></body></html>
