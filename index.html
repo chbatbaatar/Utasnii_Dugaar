@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="mn"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Алтангадас одонт ЕБ-ын I сургуулийн багш ажилчдын дугаар</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--tx:#1b2333;--mu:#667089;--bd:#e3e8f2;--ac:#2f5bea;--ac2:#e8eeff;--ok:#12a150;--dn:#d92d20;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141f;--card:#182030;--tx:#eaf0ff;--mu:#97a3bd;--bd:#26304a;--ac:#6b8cff;--ac2:#1f2b4d}}
+:root[data-theme="dark"]{--bg:#0f141f;--card:#182030;--tx:#eaf0ff;--mu:#97a3bd;--bd:#26304a;--ac:#6b8cff;--ac2:#1f2b4d}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:linear-gradient(135deg,#1e3fae,#3b6cf5 60%,#6a8dff);color:#fff;padding:18px 16px 56px}
+.w{max-width:960px;margin:0 auto}
+h1{font-size:19px;margin:0 0 4px;line-height:1.25}
+.sub{opacity:.85;font-size:13px}
+.top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.btn{border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:8px 12px;border-radius:10px;font:inherit;cursor:pointer}
+.btn.p{background:var(--ac);color:#fff;border-color:var(--ac)}.btn.d{color:var(--dn)}
+.top .btn{background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.35);white-space:nowrap}
+.stats{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.stat{background:rgba(255,255,255,.16);border-radius:10px;padding:6px 12px;font-size:13px}
+.panel{margin-top:-38px;padding:0 12px}
+.box{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px;box-shadow:0 6px 20px rgba(20,30,60,.08)}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit}
+.row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}.row>*{flex:1;min-width:120px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:10px 0 2px;scrollbar-width:thin}
+.chip{flex:none;border:1px solid var(--bd);background:var(--bg);color:var(--tx);padding:6px 11px;border-radius:99px;cursor:pointer;font-size:13px;white-space:nowrap}
+.chip.on{background:var(--ac);color:#fff;border-color:var(--ac)}.chip small{opacity:.7;margin-left:3px}
+main{padding:12px}
+.gh{display:flex;align-items:center;gap:8px;margin:16px 4px 8px;font-weight:700;cursor:pointer}
+.gh i{font-style:normal;background:var(--ac2);color:var(--ac);border-radius:99px;padding:1px 9px;font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.c{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px;display:flex;gap:10px;align-items:center}
+.av{width:42px;height:42px;border-radius:50%;flex:none;display:grid;place-items:center;color:#fff;font-weight:700}
+.inf{flex:1;min-width:0}.nm{font-weight:600}.gp{font-size:12px;color:var(--mu)}
+.ph{display:inline-block;margin-top:3px;color:var(--ac);font-weight:600;text-decoration:none;margin-right:8px}
+.car{display:inline-block;margin-top:4px;font-size:12px;font-weight:700;border:1.5px solid var(--tx);border-radius:6px;padding:0 6px;letter-spacing:1px}
+.act{display:flex;flex-direction:column;gap:6px}.ib{border:1px solid var(--bd);background:var(--bg);color:var(--tx);border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:15px}
+.empty{text-align:center;color:var(--mu);padding:40px}
+.mod{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:14px;z-index:20}
+.mod.on{display:flex}.mb{background:var(--card);border-radius:16px;padding:16px;width:100%;max-width:420px;max-height:90vh;overflow:auto}
+.mb h3{margin:0 0 10px}.mb label{display:block;font-size:12px;color:var(--mu);margin:8px 0 3px}
+.toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 14px;border-radius:10px;opacity:0;transition:.2s;z-index:30;pointer-events:none}.toast.on{opacity:1}
+.adm{background:var(--ac2);border:1px dashed var(--ac);border-radius:10px;padding:8px;margin-top:8px;display:none;gap:8px;flex-wrap:wrap}.adm.on{display:flex}
+</style></head><body>
+<header><div class="w"><div class="top"><div><h1>Алтангадас одонт ЕБ-ын I сургуулийн багш ажилчдын дугаар</h1><div class="sub">Арвайхээр сум · 2026.10.14-ний жагсаалт</div></div><button class="btn" id="lg">🔒 Админ</button></div>
+<div class="stats" id="st"></div></div></header>
+<div class="panel"><div class="w box">
+<input id="q" type="search" placeholder="🔍 Нэр, утас, машины дугаараар хайх...">
+<div class="chips" id="ch"></div>
+<div class="row"><select id="vw"><option value="g">Бүлгээр харуулах</option><option value="l">Нэг жагсаалт</option></select>
+<select id="so"><option value="i">Жагсаалтын дараалал</option><option value="n">Нэрээр (А-Я)</option></select>
+<select id="fl"><option value="">Бүгд</option><option value="c">Машинтай</option><option value="x">Машингүй</option></select></div>
+<div class="adm" id="ad"><button class="btn p" id="add">＋ Нэмэх</button><button class="btn p" id="dj">⬇ data.json татах</button><button class="btn" id="bk">💾 Нөөцлөх / Сэргээх</button><button class="btn" id="pn">🔑 PIN солих</button></div>
+</div></div>
+<main class="w" id="ls"></main>
+<div class="mod" id="md"><div class="mb" id="mb"></div></div><div class="toast" id="ts"></div>
+<script>
+const $=s=>document.querySelector(s),KEY='altan_staff_v1',PK='altan_pin_v1';
+let P=[],admin=false,grp='',nid=1;
+const ld=k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}};
+function sv(){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
+function dlj(){const b=new Blob([JSON.stringify(P)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='data.json';document.body.appendChild(a);a.click();a.remove();try{localStorage.removeItem(KEY)}catch(e){}toast('data.json татагдлаа')}
+async function init(){try{const r=await fetch('data.json?v='+Date.now());P=await r.json()}catch(e){P=[];toast('data.json уншиж чадсангүй')}nid=P.length?Math.max(...P.map(x=>x.id))+1:1}
+const G=()=>[...new Set(P.map(x=>x.g))];
+const hue=g=>{let h=0;for(const ch of g)h=(h*31+ch.charCodeAt(0))%360;return h};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function toast(t){const e=$('#ts');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),1600)}
+function card(x){const ini=(x.n.split('.')[1]||x.n)[0]||'?';const ph=x.p.split('/').map(p=>`<a class="ph" href="tel:${esc(p)}">📞 ${esc(p)}</a>`).join('');
+return `<div class="c"><div class="av" style="background:hsl(${hue(x.g)},55%,48%)">${esc(ini)}</div><div class="inf"><div class="nm">${esc(x.n)}</div><div class="gp">${esc(x.g)}</div>${ph}${x.c?`<div><span class="car">🚗 ${esc(x.c)}</span></div>`:''}</div><div class="act"><button class="ib" data-cp="${x.id}" title="Хуулах">📋</button>${admin?`<button class="ib" data-ed="${x.id}" title="Засах">✏️</button>`:''}</div></div>`}
+function mt(x,q){if(!q)return true;const d=q.replace(/[\s\-]/g,'');
+if(/^\d+$/.test(d))return x.p.split('/').some(p=>p.replace(/\D/g,'').includes(d))||x.c.replace(/\D/g,'').includes(d);
+return (x.n+' '+x.p+' '+x.c+' '+x.g).toLowerCase().includes(q)||x.c.replace(/[\s\-]/g,'').toLowerCase().includes(d)}
+function render(){const q=$('#q').value.trim().toLowerCase(),f=$('#fl').value,so=$('#so').value,vw=$('#vw').value;
+let L=P.filter(x=>(!grp||x.g==grp)&&(!f||(f=='c')==!!x.c)&&mt(x,q));
+if(so=='n')L.sort((a,b)=>a.n.split('.').pop().localeCompare(b.n.split('.').pop(),'mn'));
+$('#st').innerHTML=`<div class="stat">👥 Нийт ${P.length}</div><div class="stat">🏷️ ${G().length} бүлэг</div><div class="stat">🚗 ${P.filter(x=>x.c).length} машин</div><div class="stat">🔎 ${L.length} илэрц</div>`;
+$('#ch').innerHTML=`<button class="chip ${grp?'':'on'}" data-g="">Бүгд<small>${P.length}</small></button>`+G().map(g=>`<button class="chip ${grp==g?'on':''}" data-g="${esc(g)}">${esc(g)}<small>${P.filter(x=>x.g==g).length}</small></button>`).join('');
+if(!L.length){$('#ls').innerHTML='<div class="empty">Илэрц олдсонгүй</div>';return}
+if(vw=='l'){$('#ls').innerHTML=`<div class="grid">${L.map(card).join('')}</div>`;return}
+$('#ls').innerHTML=G().filter(g=>L.some(x=>x.g==g)).map(g=>{const a=L.filter(x=>x.g==g);return `<div class="gh">${esc(g)} <i>${a.length}</i></div><div class="grid">${a.map(card).join('')}</div>`}).join('')}
+function modal(h){$('#mb').innerHTML=h;$('#md').classList.add('on')}
+const close=()=>$('#md').classList.remove('on');
+function login(){modal(`<h3>🔒 Админ нэвтрэх</h3><label>PIN код</label><input id="pin" type="password" inputmode="numeric" autofocus><div class="row"><button class="btn" onclick="close_()">Болих</button><button class="btn p" id="go">Нэвтрэх</button></div>`);
+$('#go').onclick=()=>{const pin=localStorage.getItem(PK)||'1234';if($('#pin').value==pin){admin=true;{const d=ld(KEY);if(d&&d.length&&confirm('Хадгалагдаагүй ноорог байна. Ашиглах уу?')){P=d;nid=Math.max(...P.map(x=>x.id))+1}}$('#ad').classList.add('on');$('#lg').textContent='🔓 Гарах';close();render();toast('Админ эрх идэвхжлээ')}else toast('PIN буруу байна')}}
+window.close_=close;
+function edit(id){const x=id?P.find(p=>p.id==id):{n:'',p:'',c:'',g:grp||G()[0]};
+modal(`<h3>${id?'Засах':'Шинээр нэмэх'}</h3><label>Нэр</label><input id="e1" value="${esc(x.n)}"><label>Утас (олон бол / -ээр тусгаарла)</label><input id="e2" inputmode="tel" value="${esc(x.p)}"><label>Машины дугаар</label><input id="e3" value="${esc(x.c)}" placeholder="жишээ: 1234 УБА"><label>Бүлэг</label><select id="e4">${G().map(g=>`<option ${g==x.g?'selected':''}>${esc(g)}</option>`).join('')}<option value="__n">＋ Шинэ бүлэг...</option></select><input id="e5" placeholder="Шинэ бүлгийн нэр" style="display:none;margin-top:6px">
+<div class="row">${id?'<button class="btn d" id="dl">Устгах</button>':''}<button class="btn" onclick="close_()">Болих</button><button class="btn p" id="sv">Хадгалах</button></div>`);
+$('#e4').onchange=e=>$('#e5').style.display=e.target.value=='__n'?'block':'none';
+$('#sv').onclick=()=>{let g=$('#e4').value;if(g=='__n')g=$('#e5').value.trim();const n=$('#e1').value.trim();if(!n||!g)return toast('Нэр, бүлгээ бөглөнө үү');
+const o={n,p:$('#e2').value.trim(),c:$('#e3').value.trim().toUpperCase(),g};if(id)Object.assign(x,o);else P.push({id:nid++,...o});sv();close();render();toast('Хадгалагдлаа')};
+if(id)$('#dl').onclick=()=>{if(confirm('Устгах уу?')){P=P.filter(p=>p.id!=id);sv();close();render()}}}
+function backup(){modal(`<h3>💾 Нөөцлөх / Сэргээх</h3><label>Өгөгдөл (JSON). Хуулж хадгалах эсвэл буцаан буулгаж сэргээнэ</label><textarea id="js" rows="8">${esc(JSON.stringify(P))}</textarea><div class="row"><button class="btn" onclick="close_()">Хаах</button><button class="btn p" id="im">Сэргээх</button></div>`);
+$('#im').onclick=()=>{try{const a=JSON.parse($('#js').value);if(!Array.isArray(a))throw 0;P=a.map((x,i)=>({id:i+1,n:x.n,p:x.p,g:x.g,c:x.c||''}));nid=P.length+1;sv();close();render();toast('Сэргээгдлээ')}catch(e){toast('JSON буруу байна')}}}
+$('#lg').onclick=()=>{if(admin){admin=false;$('#ad').classList.remove('on');$('#lg').textContent='🔒 Админ';render()}else login()};
+$('#add').onclick=()=>edit();$('#bk').onclick=backup;$('#dj').onclick=dlj;
+$('#pn').onclick=()=>{modal(`<h3>🔑 PIN солих</h3><input id="np" type="password" inputmode="numeric" placeholder="Шинэ PIN"><div class="row"><button class="btn" onclick="close_()">Болих</button><button class="btn p" id="ok">Хадгалах</button></div>`);$('#ok').onclick=()=>{const v=$('#np').value.trim();if(v.length<4)return toast('PIN 4+ тэмдэгт');try{localStorage.setItem(PK,v)}catch(e){}close();toast('PIN солигдлоо')}};
+$('#md').onclick=e=>{if(e.target.id=='md')close()};
+['q','vw','so','fl'].forEach(i=>$('#'+i).oninput=render);
+document.addEventListener('click',e=>{const t=e.target.closest('[data-g],[data-ed],[data-cp]');if(!t)return;
+if(t.dataset.g!==undefined){grp=t.dataset.g;render()}else if(t.dataset.ed)edit(t.dataset.ed);else{const x=P.find(p=>p.id==t.dataset.cp);try{navigator.clipboard.writeText(x.n+' '+x.p+(x.c?' '+x.c:''));toast('Хуулагдлаа')}catch(e){toast('Хуулж чадсангүй')}}});
+init().then(render);
+</script></body></html>
