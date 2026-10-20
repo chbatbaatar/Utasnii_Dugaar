@@ -42,6 +42,7 @@ main{padding:12px}
 .toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 14px;border-radius:10px;opacity:0;transition:.2s;z-index:30;pointer-events:none}.toast.on{opacity:1}
 .adm{background:var(--ac2);border:1px dashed var(--ac);border-radius:10px;padding:8px;margin-top:8px;display:none;gap:8px;flex-wrap:wrap}.adm.on{display:flex}
 .tt{display:flex;gap:10px;align-items:center}.logo{height:46px;background:#fff;border-radius:10px;padding:5px;flex:none}.back{background:var(--or);color:#fff;border:0;border-radius:99px;padding:9px 18px;font:inherit;font-weight:700;margin-bottom:10px;cursor:pointer}.tile{background:var(--card);border:1px solid var(--bd);border-left:5px solid var(--or);border-radius:14px;padding:16px;cursor:pointer;font-weight:700;font-size:16px;display:flex;justify-content:space-between;gap:8px}.tile small{color:var(--mu);font-weight:500}
+.info{margin-top:12px}.dt{font-weight:800;font-size:17px;color:var(--ac)}.wx{display:flex;gap:14px;align-items:center;margin-top:10px;flex-wrap:wrap}.big{font-size:42px;font-weight:800;line-height:1}.wx small{color:var(--mu);display:block}.days{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.dy{background:var(--bg);border-radius:10px;padding:8px;text-align:center;font-size:13px}.dy b{display:block}.adv{margin:10px 0 0;padding:0;list-style:none}.adv li{padding:8px 10px;border-radius:10px;margin-top:6px;font-size:14px;background:var(--ac2)}.adv li.w{background:#fff1e0;color:#7a3d00;border-left:4px solid var(--or)}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .adv li.w{background:#3a2a16;color:#ffd7ad}}.zr{margin-top:12px;border-top:1px dashed var(--bd);padding-top:10px;font-size:14px}.zr h4{margin:0 0 6px}.zr div{padding:2px 0}.note{color:var(--mu);font-size:12px;margin-top:8px}
 </style></head><body>
 <header><div class="w"><button class="back" id="back" hidden>← Буцах</button><div class="top"><div class="tt"><img class="logo" src="logo-sm.png" alt=""><div><h1>Алтангадас одонт ЕБ-ын I сургуулийн багш ажилчдын дугаар</h1><div class="sub">Арвайхээр сум · 2026.10.14-ний жагсаалт</div></div></div><button class="btn" id="lg">🔒 Админ</button></div>
 <div class="stats" id="st"></div></div></header>
@@ -53,6 +54,7 @@ main{padding:12px}
 <select id="fl"><option value="">Бүгд</option><option value="c">Машинтай</option><option value="x">Машингүй</option></select></div>
 <div class="adm" id="ad"><button class="btn p" id="add">＋ Нэмэх</button><button class="btn" id="gh">🔗 GitHub холбох</button><button class="btn p" id="dj">⬇ data.json татах</button><button class="btn" id="bk">💾 Нөөцлөх / Сэргээх</button><button class="btn" id="pn">🔑 PIN солих</button></div>
 </div></div>
+<div class="w" style="padding:12px 12px 0"><div id="info" hidden></div></div>
 <main class="w" id="ls"></main>
 <div class="mod" id="md"><div class="mb" id="mb"></div></div><div class="toast" id="ts"></div>
 <script>
@@ -75,6 +77,27 @@ async function init(){try{const r=await fetch('data.json?v='+Date.now());P=await
 const G=()=>[...new Set(P.map(x=>x.g))];
 const hue=g=>{let h=0;for(const ch of g)h=(h*31+ch.charCodeAt(0))%360;return h};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const WD=['Ням','Даваа','Мягмар','Лхагва','Пүрэв','Баасан','Бямба'];
+function WC(c){if(c==0)return['Цэлмэг','☀️'];if(c<=3)return['Үүлэрхэг','⛅'];if(c==45||c==48)return['Манантай','🌫️'];if(c>=51&&c<=57)return['Шиврээ бороотой','🌦️'];if((c>=61&&c<=67)||(c>=80&&c<=82))return['Бороотой','🌧️'];if((c>=71&&c<=77)||c==85||c==86)return['Цастай','🌨️'];if(c>=95)return['Аадар, цахилгаантай','⛈️'];return['Үүлэрхэг','☁️']}
+function adv(w){const a=[],mn=w.daily.temperature_2m_min[0],mx=w.daily.temperature_2m_max[0],ws=Math.max(w.current.wind_speed_10m,w.daily.wind_speed_10m_max[0]),g=w.current.wind_gusts_10m,pr=w.daily.precipitation_sum[0],c=w.daily.weather_code[0];
+if(mn<=-20)a.push(['w','Маш хүйтэн өдөр. Зузаан хувцаслаж, гар нүүр чихээ халхлаарай. Хүүхдийг гадаа удаан байлгахгүй.']);
+else if(mn<=-10)a.push(['w','Хүйтэн өдөр. Дулаан хувцаслаарай.']);
+else if(mn<=0)a.push(['','Өглөө, орой хүйтэн байна. Давхарлаж хувцаслаарай.']);
+if(mx>=30)a.push(['w','Халуун өдөр. Ус их уугаад нарнаас хамгаалаарай.']);
+if(ws>=10||g>=15)a.push(['w','Салхи ихтэй. Машин жолоодохдоо болгоомжилж, хөнгөн зүйлээ хамгаалаарай.']);
+if((c>=71&&c<=77)||c==85||c==86||(pr>0.2&&mx<=1))a.push(['w','Цас орно. Зам халтиргаатай тул удаан, болгоомжтой яваарай.']);
+else if((c>=51&&c<=67)||(c>=80&&c<=82)||pr>0.5)a.push(['','Бороо орно. Шүхэр авч явна уу.']);
+if(c==45||c==48)a.push(['w','Манантай. Замд үзэгдэх орчин муу байж болно.']);
+if(c>=95)a.push(['w','Аадар, цахилгаан ниргэнэх магадлалтай. Задгай газар байхаас зайлсхийнэ үү.']);
+if(!a.length)a.push(['','Онцгой анхааруулах зүйл алга. Сайхан өдөр болтугай!']);return a}
+async function loadInfo(){const d=new Date(),el=$('#info'),key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+let h=`<div class="box info"><div class="dt">📅 ${d.getFullYear()} оны ${d.getMonth()+1}-р сарын ${d.getDate()}, ${WD[d.getDay()]} гариг</div>`;
+try{const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=46.2639&longitude=102.775&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,wind_gusts_10m&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code,wind_speed_10m_max&timezone=Asia%2FUlaanbaatar&forecast_days=3&wind_speed_unit=ms');if(!r.ok)throw 0;const w=await r.json(),cw=WC(w.current.weather_code),R1=x=>Math.round(x);
+h+=`<div class="wx"><div style="font-size:44px">${cw[1]}</div><div class="big">${R1(w.current.temperature_2m)}°</div><div><b>Арвайхээр · ${cw[0]}</b><small>Мэдрэгдэх ${R1(w.current.apparent_temperature)}° · Салхи ${R1(w.current.wind_speed_10m)} м/с</small></div></div><div class="days">`+w.daily.time.map((t,i)=>{const dd=new Date(t+'T00:00:00'),c=WC(w.daily.weather_code[i]);return `<div class="dy"><b>${i?WD[dd.getDay()]:'Өнөөдөр'}</b>${c[1]} ${R1(w.daily.temperature_2m_min[i])}° / ${R1(w.daily.temperature_2m_max[i])}°</div>`}).join('')+`</div><ul class="adv">`+adv(w).map(x=>`<li class="${x[0]}">${x[0]?'⚠️ ':'💡 '}${x[1]}</li>`).join('')+`</ul><div class="note">Мэдээ: Open-Meteo (автомат прогноз). Албан ёсны анхааруулгыг Цаг уур, орчны шинжилгээний газраас шалгана уу.</div>`}catch(e){h+='<div class="note">Цаг агаарын мэдээг одоогоор авч чадсангүй.</div>'}
+let z=null;try{const r=await fetch('zurkhai.json?v='+Date.now());if(r.ok)z=(await r.json())[key]}catch(e){}
+h+='<div class="zr"><h4>🌙 Өнөөдрийн зурхай</h4>'+(z?[['lunar','Сарны өдөр'],['good','Сайн цаг'],['bad','Муу цаг'],['haircut','Үс засуулах'],['work','Шинэ ажил эхлэх'],['travel','Замд гарах']].filter(x=>z[x[0]]).map(x=>`<div><b>${x[1]}:</b> ${esc(z[x[0]])}</div>`).join(''):'<div class="note">Өнөөдрийн зурхайн мэдээлэл одоогоор оруулаагүй байна.</div>')+'</div></div>';
+el.innerHTML=h}
 function toast(t){const e=$('#ts');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),3500)}
 function card(x){const ini=(x.n.split('.')[1]||x.n)[0]||'?';const ph=x.p.split('/').map(p=>`<a class="ph" href="tel:${esc(p)}">📞 ${esc(p)}</a>`).join('');
 return `<div class="c"><div class="av" style="background:hsl(${hue(x.g)},55%,48%)">${esc(ini)}</div><div class="inf"><div class="nm">${esc(x.n)}</div><div class="gp">${esc(x.g)}</div>${ph}${x.c?`<div><span class="car">🚗 ${esc(x.c)}</span></div>`:''}</div><div class="act"><button class="ib" data-cp="${x.id}" title="Хуулах">📋</button>${admin?`<button class="ib" data-ed="${x.id}" title="Засах">✏️</button>`:''}</div></div>`}
@@ -87,6 +110,7 @@ if(so=='n')L.sort((a,b)=>a.n.split('.').pop().localeCompare(b.n.split('.').pop()
 $('#st').innerHTML=`<button class="stat" data-s="all">👥 Нийт ${P.length}</button><button class="stat" data-s="grp">🏷️ ${G().length} бүлэг</button><button class="stat" data-s="car">🚗 ${P.filter(x=>x.c).length} машин</button><div class="stat">🔎 ${L.length} илэрц</div>`;
 $('#ch').innerHTML=`<button class="chip ${grp?'':'on'}" data-g="">Бүгд<small>${P.length}</small></button>`+G().map(g=>`<button class="chip ${grp==g?'on':''}" data-g="${esc(g)}">${esc(g)}<small>${P.filter(x=>x.g==g).length}</small></button>`).join('');
 $('#back').hidden=!(grp||mode||$('#fl').value);
+$('#info').hidden=!!(grp||mode||$('#fl').value||q);
 if(mode=='groups'){$('#ls').innerHTML='<div class="grid">'+G().map(g=>`<div class="tile" data-g="${esc(g)}"><span>${esc(g)}</span><small>${P.filter(x=>x.g==g).length} хүн</small></div>`).join('')+'</div>';return}
 if(!L.length){$('#ls').innerHTML='<div class="empty">Илэрц олдсонгүй</div>';return}
 if(vw=='l'){$('#ls').innerHTML=`<div class="grid">${L.map(card).join('')}</div>`;return}
@@ -112,5 +136,5 @@ $('#md').onclick=e=>{if(e.target.id=='md')close()};
 ['q','vw','so','fl'].forEach(i=>$('#'+i).oninput=render);
 document.addEventListener('click',e=>{const t=e.target.closest('[data-g],[data-ed],[data-cp],[data-s],#back');if(!t)return;
 if(t.id=='back'){if(history.state)history.back();else nav('','','')}else if(t.dataset.s){const k=t.dataset.s;nav('',k=='grp'?'groups':'',k=='car'?'c':'')}else if(t.dataset.g!==undefined){nav(t.dataset.g,'',$('#fl').value)}else if(t.dataset.ed)edit(t.dataset.ed);else{const x=P.find(p=>p.id==t.dataset.cp);try{navigator.clipboard.writeText(x.n+' '+x.p+(x.c?' '+x.c:''));toast('Хуулагдлаа')}catch(e){toast('Хуулж чадсангүй')}}});
-init().then(render);
+init().then(()=>{render();loadInfo()});
 </script></body></html>
