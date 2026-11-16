@@ -280,8 +280,10 @@ function parseAsc(text,nameMode){
 /* ---------- нийтлэх ---------- */
 const outJSON=()=>JSON.stringify(DRAFT);
 function b64(str){const u=new TextEncoder().encode(str);let s='';for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s)}
-async function ghSave(){
-  if(!GH.owner||!GH.repo||!GH.path||!GH.token)return fail('GitHub хэрэглэгч, repo, файлын зам, токеноо бөглөнө үү.');
+function readGH(){document.querySelectorAll('[data-g]').forEach(i=>{GH[i.dataset.g]=i.value.trim()});ls.set('tt-gh',JSON.stringify(GH))}
+async function ghSave(){readGH();
+  const miss=[['owner','GitHub хэрэглэгч'],['repo','Repo'],['path','Файлын зам'],['token','Токен']].filter(f=>!GH[f[0]]).map(f=>f[1]);
+  if(miss.length)return fail('Дутуу байна: '+miss.join(', ')+'. «Нийтлэх» хэсгийн талбаруудыг бөглөнө үү.');
   S.msg={t:'Хадгалж байна…'};renderAdmin();
   try{const url=`https://api.github.com/repos/${encodeURIComponent(GH.owner)}/${encodeURIComponent(GH.repo)}/contents/${GH.path.split('/').map(encodeURIComponent).join('/')}`;
     const hd={Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json'};
@@ -334,7 +336,8 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
   else if(d.add)S.edit={i:-1,p:+d.add,fresh:true};
   else return;
   render()});
-document.addEventListener('input',e=>{if(e.target.id==='q'){S.q=e.target.value;render(true)}});
+document.addEventListener('input',e=>{const g=e.target.dataset&&e.target.dataset.g;if(g){GH[g]=e.target.value.trim();ls.set('tt-gh',JSON.stringify(GH));return}
+  if(e.target.id==='q'){S.q=e.target.value;render(true)}});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.closest&&e.target.closest('.form')){const b=e.target.closest('.form').querySelector('.btn');if(b)b.click()}});
 document.addEventListener('toggle',e=>{const k=e.target.dataset&&e.target.dataset.det;if(k)S.open[k]=e.target.open},true);
 document.addEventListener('change',e=>{const t=e.target,d=t.dataset;
