@@ -6,8 +6,8 @@
 <title>Хичээлийн хуваарь</title>
 <link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#14307f">
 <style>
-:root{--bg:#f4f6f5;--card:#fff;--ink:#17201d;--mute:#64716c;--line:#dfe5e2;--acc:#0b6b5c;--acc-soft:#dff1ec;--s2:#8a4b12;--s2-soft:#f8ead9;--warn:#fff4d6;--warn-ink:#6b5200;--adm:#1f2f4d;--adm-ink:#fff;--bad:#b3261e}
-@media (prefers-color-scheme:dark){:root{--bg:#111614;--card:#1a211f;--ink:#e8eeeb;--mute:#93a19b;--line:#2b3531;--acc:#5cc9b4;--acc-soft:#17352f;--s2:#e8a765;--s2-soft:#38281a;--warn:#3a3114;--warn-ink:#f0d98a;--adm:#27406b;--bad:#ff8a80}}
+:root{--bg:#f4f6f5;--card:#fff;--ink:#17201d;--mute:#64716c;--line:#dfe5e2;--acc:#0b6b5c;--acc-soft:#dff1ec;--s2:#8a4b12;--s2-soft:#f8ead9;--warn:#fff4d6;--warn-ink:#6b5200;--adm:#1f2f4d;--adm-ink:#fff;--bad:#b3261e;--sh1:#fdf0c4;--sh2:#d6e9fa;--sh1b:#e8c96a;--sh2b:#8cb8de}
+@media (prefers-color-scheme:dark){:root{--bg:#111614;--card:#1a211f;--ink:#e8eeeb;--mute:#93a19b;--line:#2b3531;--acc:#5cc9b4;--acc-soft:#17352f;--s2:#e8a765;--s2-soft:#38281a;--warn:#3a3114;--warn-ink:#f0d98a;--adm:#27406b;--bad:#ff8a80;--sh1:#3f3615;--sh2:#15314c;--sh1b:#7a6a2c;--sh2b:#3a6a96}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 .wrap{max-width:860px;margin:0 auto;padding:16px 14px 48px}
@@ -71,6 +71,22 @@ footer{margin-top:28px;display:flex;justify-content:space-between;gap:10px;color
 .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .msg{font-size:.9rem;margin:8px 0;padding:8px 10px;border-radius:9px;background:var(--acc-soft);color:var(--ink)}
 .msg.err{background:var(--warn);color:var(--warn-ink)}
+.wkwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px}
+table.wk{width:100%;min-width:540px;border-collapse:collapse;table-layout:fixed;font-size:.8rem}
+.wk th,.wk td{border:1px solid var(--line);padding:3px;vertical-align:top}
+.wk thead th{background:var(--bg);font-size:.75rem;letter-spacing:.03em;padding:6px 2px}
+.wk tbody th{background:var(--bg);width:46px;text-align:center;font-size:1rem}
+.wk tbody th small{display:block;font-weight:400;font-size:.62rem;opacity:.7;line-height:1.25}
+.wk td{height:34px}
+.wk .e1,.wk .e2{border-radius:6px;padding:3px 5px;margin-bottom:3px;border-left:3px solid var(--sh1b)}
+.wk .e1{background:var(--sh1)}
+.wk .e2{background:var(--sh2);border-left-color:var(--sh2b)}
+.wk .e1 b,.wk .e2 b{display:block;font-size:.85rem;line-height:1.2}
+.wk .e1 small,.wk .e2 small{display:block;font-size:.7rem;opacity:.8;line-height:1.25}
+.wk .tdy{outline:2px solid var(--acc);outline-offset:-2px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin:0 4px 0 0;border-left:3px solid var(--sh1b)}
+.lg.l2{background:var(--sh2);border-left-color:var(--sh2b);margin-left:14px}
+.lg.l1{background:var(--sh1)}
 .apphead{display:flex;gap:10px;align-items:center}
 .applogo{height:44px;background:#fff;border-radius:9px;padding:4px;flex:none}
 .apptabs{display:flex;gap:8px;margin:0 0 14px}
@@ -136,12 +152,33 @@ function blocks(rowFn,filter){const d=D(),cur=S.day===today()?nowSlot():-1;
 const noData=()=>`<div class="card emptymsg">${esc(D().days[S.day])} гарагийн өгөгдөл хараахан ороогүй байна.</div>`;
 const tBtn=t=>`<button class="link" data-t="${t}">${esc(D().teachers[t])}</button>`;
 
+function weekTable(t){const d=D();
+  const info=d.periods.map(P=>{const x=String(P.s||''),k=x.indexOf('.');return k>0?{sh:x.slice(0,k),num:x.slice(k+1),a:P.a}:{sh:'',num:x,a:P.a}});
+  const nums=[];info.forEach(x=>{if(nums.indexOf(x.num)<0)nums.push(x.num)});
+  nums.sort((a,b)=>(parseFloat(a)||0)-(parseFloat(b)||0));
+  const days=d.days.slice(0,5),cell={},used={};let tot=0;
+  days.forEach((_,dy)=>{const m=X.T[dy+'|'+t]||{};
+    Object.keys(m).forEach(pi=>{const I=info[pi];if(!I)return;tot+=m[pi].length;
+      (cell[dy+'|'+I.num]=cell[dy+'|'+I.num]||[]).push({sh:I.sh,pi:+pi,ids:m[pi]});used[I.num]=1})});
+  const rows=nums.filter(n=>used[n]),td=today();
+  let h=`<div class="card"><h2>${esc(d.teachers[t])}</h2><p class="sub">7 хоногийн хуваарь · ${tot} цаг</p>`;
+  if(!rows.length)return h+'<p class="free">Хуваарь ороогүй байна.</p></div>';
+  const tm=n=>{const a=info.filter(x=>x.num===n&&x.sh==='1')[0],b=info.filter(x=>x.num===n&&x.sh==='2')[0];
+    return [a&&a.a,b&&b.a].filter(Boolean).join('<br>')};
+  h+='<div class="wkwrap"><table class="wk"><thead><tr><th>Цаг</th>'+
+    days.map((n,i)=>`<th${i===td?' class="tdy"':''}>${esc(String(n).toUpperCase())}</th>`).join('')+'</tr></thead><tbody>';
+  rows.forEach(n=>{h+=`<tr><th>${esc(n)}<small>${tm(n)}</small></th>`+days.map((_,dy)=>{
+    const list=(cell[dy+'|'+n]||[]).sort((a,b)=>a.pi-b.pi);
+    return `<td${dy===td?' class="tdy"':''}>`+list.map(e=>e.ids.map(i=>{const l=d.L[i];
+      return `<div class="e${e.sh==='2'?'2':'1'}"><b>${esc(l[3]||'?')}</b><small>${esc([l[4],l[5]&&('каб. '+l[5])].filter(Boolean).join(' · '))}</small></div>`}).join('')).join('')+'</td>'}).join('')+'</tr>'});
+  return h+'</tbody></table></div><p class="sub" style="margin:10px 0 0"><span class="lg l1"></span>I ээлж<span class="lg l2"></span>II ээлж</p></div>'}
 function vTeacher(){const d=D();
   let h=`<input type="search" id="q" placeholder="Багшийн нэрээр хайх…" value="${esc(S.q)}" aria-label="Багш хайх">`;
   const q=S.q.trim().toLowerCase(),list=X.tOrder.filter(t=>d.teachers[t].toLowerCase().includes(q));
   h+=`<div class="chips">${list.map(t=>`<button class="chip" data-t="${t}" aria-pressed="${t===S.teacher}">${esc(d.teachers[t])}</button>`).join('')||'<span class="free">Олдсонгүй</span>'}</div>`;
   if(S.teacher<0||S.teacher>=d.teachers.length)return h;
-  if(!X.used[S.day]&&!ADMIN)return h+noData();
+  h+=weekTable(S.teacher);
+  if(!ADMIN)return h;
   const m=X.T[S.day+'|'+S.teacher]||{},n=Object.keys(m).length;
   h+=`<div class="card"><h2>${esc(d.teachers[S.teacher])}</h2><p class="sub">${esc(d.days[S.day])} · ${n} цаг${ADMIN?' · нүдийг засахдаа ✎, нэмэхдээ ＋ дарна':''}</p>`+
     blocks(p=>{const ids=m[p]||[];let r=ids.map(i=>{const l=d.L[i];
