@@ -205,8 +205,11 @@ function renderAdmin(){const el=$('admin');el.hidden=!ADMIN;if(!ADMIN){el.innerH
   let imp=`<p>aSc Timetables дээр <b>Файл → Экспорт → aSc Timetables XML</b> гэж гаргасан файлыг сонгоно. Оруулахад бүх өдөр, багш, цаг шинээр солигдоно.</p>
     <div class="fields"><label class="wide">XML файл<input type="file" id="ascfile" accept=".xml,text/xml,application/xml"></label>
     <label>Багшийн нэр<select id="asc-tn"><option value="auto">Автомат</option><option value="short">Товч нэр</option><option value="name">Бүтэн нэр</option></select></label></div>`;
-  if(PENDING)imp+=`<div class="msg">Файлаас уншсан: <b>${PENDING.teachers.length}</b> багш, <b>${new Set(PENDING.L.flatMap(l=>clsList(l[3]))).size}</b> анги, <b>${PENDING.L.length}</b> цаг, ${PENDING.days.length} өдөр × ${PENDING.periods.length} цаг.</div>
-    <div class="btns"><button class="btn pri" data-act="imp-apply">Хуваарийг солих</button><button class="btn" data-act="imp-cancel">Болих</button></div>`;
+  if(PENDING){const rc={};PENDING.L.forEach(l=>{if(!l[5])return;const k=l[5]+'|'+l[1]+'|'+l[2];(rc[k]=rc[k]||new Set()).add(l[3]+'·'+l[0])});
+    const bad=Object.keys(rc).filter(k=>rc[k].size>1),rooms=[...new Set(bad.map(k=>k.split('|')[0]))];
+    imp+=`<div class="msg">Файлаас уншсан: <b>${PENDING.teachers.length}</b> багш, <b>${new Set(PENDING.L.flatMap(l=>clsList(l[3]))).size}</b> анги, <b>${PENDING.L.length}</b> цаг, ${PENDING.days.length} өдөр × ${PENDING.periods.length} цаг.</div>`;
+    if(bad.length)imp+=`<div class="msg err">Анхаар: <b>${bad.length}</b> удаа нэг кабинетад хоёр ба түүнээс олон хичээл давхцаж байна. Кабинет: ${esc(rooms.slice(0,6).join(', '))}${rooms.length>6?'…':''}. Энэ нь XML файлын өгөгдөл тул aSc дээрээ засна.</div>`;
+    imp+=`<div class="btns"><button class="btn pri" data-act="imp-apply">Хуваарийг солих</button><button class="btn" data-act="imp-cancel">Болих</button></div>`}
   const gen=`<div class="fields"><label class="wide">Гарчиг<input data-f="title" value="${esc(d.title)}"></label><label class="wide">Дэд гарчиг<input data-f="sub" value="${esc(d.sub)}"></label><label class="wide">Анхааруулга (хоосон бол харагдахгүй)<input data-f="note" value="${esc(d.note)}"></label></div>
     <table class="ptab"><tr><td class="meta">Цаг</td><td class="meta">Эхлэх</td><td class="meta">Дуусах</td></tr>`+
     d.periods.map((P,i)=>`<tr><td><input data-p="${i}" data-k="s" value="${esc(P.s)}" aria-label="Цагийн нэр"></td><td><input type="time" data-p="${i}" data-k="a" value="${esc(P.a)}" aria-label="Эхлэх"></td><td><input type="time" data-p="${i}" data-k="b" value="${esc(P.b)}" aria-label="Дуусах"></td></tr>`).join('')+
@@ -263,20 +266,26 @@ function parseAsc(text,nameMode){
   const useShort=nameMode==='short'||(nameMode==='auto'&&dotted);
   const teachers=tEls.map((e,i)=>{tIdx[A(e,'id')]=i;const full=A(e,'name')||[A(e,'firstname'),A(e,'lastname')].filter(Boolean).join(' ');return fx((useShort?A(e,'short')||full:full||A(e,'short'))||'Багш '+(i+1))});
   const lab=(m,list,k)=>list.map(i=>m[i]?fx(A(m[i],k)||A(m[i],'name')||A(m[i],'short')):'').filter(Boolean);
+  const place={};
+  for(const c of cards){const id=A(c,'lessonid');const dz=A(c,'days');place[id]=(place[id]||0)+(dz?(dz.match(/1/g)||[]).length:1)}
   const L=[];let skipped=0;
   for(const c of cards){const l=les[A(c,'lessonid')];if(!l){skipped++;continue}
     const pi=pMap[A(c,'period')];let dl=[];
     if(c.hasAttribute('days')){const s=A(c,'days');for(let i=0;i<s.length;i++)if(s[i]==='1')dl.push(i)}
     else if(c.hasAttribute('day')){const n=parseInt(A(c,'day'));if(!isNaN(n))dl.push(n-base)}
     if(pi===undefined||!dl.length){skipped++;continue}
-    const dur=Math.max(1,parseInt(A(l,'durationperiods')||A(l,'periodspercard'))||1);
+    const ppw=parseFloat(A(l,'periodsperweek'))||0,ppc=Math.max(1,parseInt(A(l,'periodspercard'))||1);
+    const explicit=Math.max(0,parseInt(A(c,'duration')||A(l,'durationperiods'))||0);
+    const dur=explicit||((ppw>0&&place[A(c,'lessonid')]>=ppw-0.001)?1:ppc);
     const cl=lab(cls,ids(A(l,'classids')||A(l,'classid')),'short').join(', ');
     const sb=lab(subj,ids(A(l,'subjectid')),'name').join(', ');
     const rm=lab(room,ids(A(c,'classroomids')||A(c,'classroomid')||A(l,'classroomids')),'short').join('/');
     for(const tid of ids(A(l,'teacherids')||A(l,'teacherid'))){const t=tIdx[tid];if(t===undefined)continue;
       for(const dy of dl)for(let k=0;k<dur&&pi+k<periods.length;k++)if(dy>=0&&dy<days.length)L.push([t,dy,pi+k,cl,sb,rm])}}
   if(!L.length)throw new Error('Файлаас нэг ч цаг уншигдсангүй. Хуваарь байрлуулсан (бодогдсон) файл эсэхийг шалгана уу.');
-  return {days,periods,teachers,L,skipped}}
+  const seen=new Set(),uniq=[];let dup=0;
+  for(const r of L){const k=r.join('\u0001');if(seen.has(k)){dup++;continue}seen.add(k);uniq.push(r)}
+  return {days,periods,teachers,L:uniq,skipped,dup}}
 
 /* ---------- нийтлэх ---------- */
 const outJSON=()=>JSON.stringify(DRAFT);
@@ -312,7 +321,7 @@ const ACT={
   'e-save'(){const v=[$('e-c').value.trim(),$('e-s').value.trim(),$('e-r').value.trim()],e=S.edit;
     if(!v[0]&&!v[1])return;if(e.i>=0)DRAFT.L[e.i].splice(3,3,...v);else DRAFT.L.push([S.teacher,S.day,e.p,...v]);S.edit=null;commit()},
   'e-del'(){DRAFT.L.splice(S.edit.i,1);S.edit=null;commit()},
-  'imp-apply'(){const keep={title:DRAFT.title,sub:DRAFT.sub,note:''};const sk=PENDING.skipped;delete PENDING.skipped;
+  'imp-apply'(){const keep={title:DRAFT.title,sub:DRAFT.sub,note:''};const sk=PENDING.skipped;delete PENDING.skipped;delete PENDING.dup;
     DRAFT=Object.assign(keep,PENDING);PENDING=null;S.teacher=-1;S.cls=null;S.grade=null;S.slot=0;S.day=0;S.open.imp=false;S.open.pub=true;
     commit('Хуваарь солигдлоо'+(sk?` (байрлуулаагүй ${sk} картыг алгассан)`:'')+'. Шалгаад «Нийтлэх» хэсгээс хадгална уу.')},
   'imp-cancel'(){PENDING=null;renderAdmin()},
