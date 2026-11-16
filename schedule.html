@@ -112,7 +112,7 @@ const clsKey=c=>(parseInt(c)||0)*100+'АБВГДЕЁЖЗИКЛМНОПРСТ'.in
 const tKey=n=>n.replace(/^[^.\s]{1,3}\.\s*/,'');
 const clsList=c=>String(c).split(',').map(s=>s.trim()).filter(Boolean);
 function reindex(){const d=D();X={T:{},C:{},used:d.days.map(()=>0)};const cs=new Set();
-  d.L.forEach((l,i)=>{const [t,dy,p,c]=l;X.used[dy]++;
+  d.L.forEach((l,i)=>{if(!Array.isArray(l))return;const [t,dy,p,c]=l;if(!(dy>=0&&dy<X.used.length))return;X.used[dy]++;
     const a=X.T[dy+'|'+t]=X.T[dy+'|'+t]||{};(a[p]=a[p]||[]).push(i);
     for(const k of clsList(c)){cs.add(k);const b=X.C[dy+'|'+k]=X.C[dy+'|'+k]||{};(b[p]=b[p]||[]).push(i)}});
   X.classes=[...cs].sort((a,b)=>clsKey(a)-clsKey(b)||a.localeCompare(b));
@@ -188,7 +188,8 @@ function render(focusQ){const d=D();
   if(S.day>=d.days.length)S.day=0;
   document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===S.tab));
   $('days').innerHTML=d.days.map((n,i)=>`<button class="chip${X.used[i]?'':' empty'}" data-day="${i}" aria-pressed="${i===S.day}">${esc(n)}</button>`).join('');
-  $('view').innerHTML=S.tab==='teacher'?vTeacher():S.tab==='class'?vClass():vSlot();
+  try{$('view').innerHTML=S.tab==='teacher'?vTeacher():S.tab==='class'?vClass():vSlot()}
+  catch(e){$('view').innerHTML='<div class="card emptymsg">Харуулахад алдаа гарлаа: '+esc(e.message)+'</div>'}
   if(focusQ){const q=$('q');if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}}
   const ec=$('e-c');if(ec&&S.edit&&S.edit.fresh){ec.focus();S.edit.fresh=false}}
 
@@ -349,10 +350,14 @@ document.addEventListener('change',e=>{const t=e.target,d=t.dataset;
     fr.onerror=()=>fail('Файлыг уншиж чадсангүй.');fr.readAsArrayBuffer(t.files[0])}});
 
 /* ---------- эхлэл ---------- */
-(async()=>{let err=null;
-  try{const r=await fetch(DATA_FILE,{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();if(!Array.isArray(j.L))throw 0;PUB=Object.assign(blank(),j)}catch(e){err=true}
-  reindex();const t=today();S.day=t>=0&&X.used[t]?t:Math.max(0,X.used.findIndex(n=>n));S.slot=Math.max(0,nowSlot());
-  render();if(err)$('view').innerHTML='<div class="card emptymsg">Хуваарийн файл ('+DATA_FILE+') олдсонгүй. «Админ» хэсгээс хуваариа оруулна уу.</div>'})();
+(async()=>{let err=null,bad=false;
+  try{const r=await fetch(DATA_FILE,{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();
+    if(!j||!Array.isArray(j.L)||!Array.isArray(j.teachers)||!Array.isArray(j.periods)||j.L.some(l=>!Array.isArray(l))){bad=true;throw 0}
+    PUB=Object.assign(blank(),j)}catch(e){err=true}
+  try{reindex();const t=today();S.day=t>=0&&X.used[t]?t:Math.max(0,X.used.findIndex(n=>n));S.slot=Math.max(0,nowSlot());render()}
+  catch(e){PUB=blank();try{reindex();render()}catch(e2){}
+    $('view').innerHTML='<div class="card emptymsg">Алдаа гарлаа: '+esc(e.message)+'<br>Админ хэсгээс хуваариа дахин оруулна уу.</div>';return}
+  if(err)$('view').innerHTML='<div class="card emptymsg">'+(bad?'Хуваарийн файл ('+DATA_FILE+') буруу хэлбэртэй байна. Админ хэсгээс aSc XML-ээ дахин оруулж нийтэлнэ үү.':'Хуваарийн файл ('+DATA_FILE+') олдсонгүй. «Админ» хэсгээс хуваариа оруулна уу.')+'</div>'})();
 </script>
 </body>
 </html>
