@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Хичээлийн хуваарь</title>
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#14307f">
+<style>
+:root{--bg:#f4f6f5;--card:#fff;--ink:#17201d;--mute:#64716c;--line:#dfe5e2;--acc:#0b6b5c;--acc-soft:#dff1ec;--s2:#8a4b12;--s2-soft:#f8ead9;--warn:#fff4d6;--warn-ink:#6b5200;--adm:#1f2f4d;--adm-ink:#fff;--bad:#b3261e}
+@media (prefers-color-scheme:dark){:root{--bg:#111614;--card:#1a211f;--ink:#e8eeeb;--mute:#93a19b;--line:#2b3531;--acc:#5cc9b4;--acc-soft:#17352f;--s2:#e8a765;--s2-soft:#38281a;--warn:#3a3114;--warn-ink:#f0d98a;--adm:#27406b;--bad:#ff8a80}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:16px 14px 48px}
+header h1{font-size:1.25rem;margin:0 0 2px;text-wrap:balance}
+header p{margin:0;color:var(--mute);font-size:.9rem}
+.note{background:var(--warn);color:var(--warn-ink);border-radius:10px;padding:8px 12px;font-size:.88rem;margin:12px 0}
+.tabs{display:flex;gap:6px;margin:14px 0 10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:4px}
+.tabs button{flex:1;border:0;background:none;color:var(--mute);font:inherit;font-weight:600;padding:9px 6px;border-radius:9px;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--acc);color:var(--card)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:.9rem;padding:6px 11px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.chip[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:var(--card);font-weight:600}
+.chip.empty{opacity:.55}
+.label{font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);margin:14px 0 2px}
+input,select{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:9px;padding:8px 10px;min-width:0}
+input[type=search]{width:100%}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:12px}
+.card h2{font-size:1.1rem;margin:0 0 2px}
+.sub{color:var(--mute);font-size:.88rem;margin:0 0 10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:560px){.grid2{grid-template-columns:1fr}}
+.shift h3{font-size:.82rem;margin:0 0 6px;color:var(--acc);text-transform:uppercase;letter-spacing:.05em}
+.shift.s2 h3{color:var(--s2)}
+.row{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0}
+.per{width:74px;flex:none;font-variant-numeric:tabular-nums;color:var(--mute);font-size:.85rem;padding-top:2px}
+.per b{color:var(--ink);font-size:.95rem}
+.cell{flex:1;min-width:0}
+.les{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin-bottom:2px}
+.pill{display:inline-block;background:var(--acc-soft);color:var(--acc);border-radius:7px;padding:2px 9px;border:0;font:inherit;font-weight:700;cursor:pointer}
+.s2 .pill{background:var(--s2-soft);color:var(--s2)}
+.meta{color:var(--mute);font-size:.86rem}
+.link{background:none;border:0;padding:0;font:inherit;color:var(--ink);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px;cursor:pointer;text-align:left}
+.free{color:var(--mute)}
+.now{outline:2px solid var(--acc);outline-offset:2px;border-radius:8px}
+table{width:100%;border-collapse:collapse}
+td{padding:7px 4px;border-top:1px solid var(--line);vertical-align:top}
+td:first-child{width:70px}
+.names{display:flex;flex-wrap:wrap;gap:6px 14px}
+.emptymsg{color:var(--mute);padding:18px 4px;text-align:center}
+footer{margin-top:28px;display:flex;justify-content:space-between;gap:10px;color:var(--mute);font-size:.82rem}
+.btn{font:inherit;font-weight:600;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:9px;padding:8px 12px;cursor:pointer}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:var(--card)}
+.btn.bad{color:var(--bad)}
+.mini{font:inherit;font-size:.85rem;border:1px solid var(--line);background:var(--card);color:var(--mute);border-radius:7px;padding:1px 8px;cursor:pointer}
+.form{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0;padding:8px;background:var(--bg);border-radius:10px}
+.form input{flex:1 1 90px}
+#admin{background:var(--card);border:2px solid var(--adm);border-radius:14px;margin:12px 0;overflow:hidden}
+#admin .bar{background:var(--adm);color:var(--adm-ink);padding:8px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:600}
+#admin .bar button{font:inherit;background:none;border:1px solid currentColor;color:inherit;border-radius:8px;padding:3px 10px;cursor:pointer}
+#admin .body{padding:4px 14px 14px}
+#admin details{border-top:1px solid var(--line);padding:10px 0}
+#admin details:first-child{border-top:0}
+#admin summary{font-weight:600;cursor:pointer}
+#admin p{font-size:.88rem;color:var(--mute);margin:8px 0}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:8px 0}
+.fields label{display:flex;flex-direction:column;gap:3px;font-size:.8rem;color:var(--mute)}
+.wide{grid-column:1/-1}
+.ptab input{width:100%}
+.ptab td{padding:3px;border:0}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.msg{font-size:.9rem;margin:8px 0;padding:8px 10px;border-radius:9px;background:var(--acc-soft);color:var(--ink)}
+.msg.err{background:var(--warn);color:var(--warn-ink)}
+.apphead{display:flex;gap:10px;align-items:center}
+.applogo{height:44px;background:#fff;border-radius:9px;padding:4px;flex:none}
+.apptabs{display:flex;gap:8px;margin:0 0 14px}
+.apptabs a{flex:1;text-align:center;padding:11px 6px;border-radius:11px;text-decoration:none;font-weight:600;background:var(--card);border:1px solid var(--line);color:var(--mute)}
+.apptabs a[aria-current]{background:var(--acc);border-color:var(--acc);color:var(--card)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="apptabs"><a href="index.html">📞 Утасны жагсаалт</a><a href="schedule.html" aria-current="page">📅 Хичээлийн хуваарь</a></nav>
+<header class="apphead"><img class="applogo" src="logo-sm.png" alt=""><div><h1 id="h-title">Хичээлийн хуваарь</h1><p id="h-sub"></p></div></header>
+<div id="h-note"></div>
+<div id="admin" hidden></div>
+<div class="tabs" role="tablist">
+<button role="tab" data-tab="teacher" aria-selected="true">Багш</button>
+<button role="tab" data-tab="class" aria-selected="false">Анги</button>
+<button role="tab" data-tab="slot" aria-selected="false">Цагаар</button>
+</div>
+<div class="chips" id="days"></div>
+<div id="view"><div class="emptymsg">Ачаалж байна…</div></div>
+<footer><span id="f-upd"></span><button class="link" data-act="admin-on" id="f-adm">Админ</button></footer>
+</div>
+<script>
+"use strict";
+const WD=['Даваа','Мягмар','Лхагва','Пүрэв','Баасан','Бямба','Ням'];
+const DATA_FILE='schedule.json';
+const clone=o=>JSON.parse(JSON.stringify(o));
+const blank=()=>({title:'Хичээлийн хуваарь',sub:'',note:'',updated:'',days:WD.slice(0,5),periods:[],teachers:[],L:[]});
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+
+let PUB=blank(),DRAFT=null,ADMIN=false,PENDING=null,X=null;
+const D=()=>ADMIN?DRAFT:PUB;
+const S={tab:'teacher',day:0,teacher:-1,cls:null,grade:null,slot:0,q:'',edit:null,open:{imp:true},msg:null,confirmDel:false};
+
+/* ---------- индекс ---------- */
+const clsKey=c=>(parseInt(c)||0)*100+'АБВГДЕЁЖЗИКЛМНОПРСТ'.indexOf(String(c).replace(/^\d+/,'').charAt(0).toUpperCase());
+const tKey=n=>n.replace(/^[^.\s]{1,3}\.\s*/,'');
+const clsList=c=>String(c).split(',').map(s=>s.trim()).filter(Boolean);
+function reindex(){const d=D();X={T:{},C:{},used:d.days.map(()=>0)};const cs=new Set();
+  d.L.forEach((l,i)=>{const [t,dy,p,c]=l;X.used[dy]++;
+    const a=X.T[dy+'|'+t]=X.T[dy+'|'+t]||{};(a[p]=a[p]||[]).push(i);
+    for(const k of clsList(c)){cs.add(k);const b=X.C[dy+'|'+k]=X.C[dy+'|'+k]||{};(b[p]=b[p]||[]).push(i)}});
+  X.classes=[...cs].sort((a,b)=>clsKey(a)-clsKey(b)||a.localeCompare(b));
+  X.tOrder=d.teachers.map((n,i)=>i).sort((a,b)=>tKey(d.teachers[a]).localeCompare(tKey(d.teachers[b]),'mn'));
+  X.groups=[];const gm={};
+  d.periods.forEach((P,i)=>{const k=P.s.includes('.')?P.s.split('.')[0]:'';
+    if(!gm[k]){gm[k]={key:k,p:[],title:k==='1'?'I ээлж':k==='2'?'II ээлж':k?k+'-р ээлж':'Цагууд'};X.groups.push(gm[k])}gm[k].p.push(i)});
+  X.pg=d.periods.map((P,i)=>X.groups.findIndex(g=>g.p.includes(i)))}
+const mins=s=>{const m=/^(\d+):(\d+)/.exec(s||'');return m?+m[1]*60+ +m[2]:-1};
+function nowSlot(){const n=new Date(),m=n.getHours()*60+n.getMinutes();return D().periods.findIndex(P=>mins(P.a)>=0&&m>=mins(P.a)&&m<mins(P.b))}
+const today=()=>{const i=(new Date().getDay()+6)%7;return i<D().days.length?i:-1};
+
+/* ---------- харагдац ---------- */
+function lesMeta(l){return [l[4],l[5]&&('каб. '+l[5])].filter(Boolean).map(esc).join(' · ')}
+function editForm(){const e=S.edit,l=e.i>=0?DRAFT.L[e.i]:[0,0,0,'','',''];
+  return `<div class="form"><input id="e-c" placeholder="Анги (8Б)" value="${esc(l[3])}" aria-label="Анги"><input id="e-s" placeholder="Хичээл" value="${esc(l[4])}" aria-label="Хичээл"><input id="e-r" placeholder="Кабинет" value="${esc(l[5])}" aria-label="Кабинет">
+  <button class="btn pri" data-act="e-save">Хадгалах</button>${e.i>=0?'<button class="btn bad" data-act="e-del">Устгах</button>':''}<button class="btn" data-act="e-cancel">Болих</button></div>`}
+function blocks(rowFn,filter){const d=D(),cur=S.day===today()?nowSlot():-1;
+  return '<div class="grid2">'+X.groups.filter(g=>!filter||filter(g)).map((g,gi)=>`<div class="shift s${X.groups.indexOf(g)%2+1}"><h3>${g.title}</h3>`+
+    g.p.map(p=>`<div class="row${p===cur?' now':''}"><div class="per"><b>${esc(d.periods[p].s)}</b> ${esc(d.periods[p].a||'')}</div><div class="cell">${rowFn(p)}</div></div>`).join('')+'</div>').join('')+'</div>'}
+const noData=()=>`<div class="card emptymsg">${esc(D().days[S.day])} гарагийн өгөгдөл хараахан ороогүй байна.</div>`;
+const tBtn=t=>`<button class="link" data-t="${t}">${esc(D().teachers[t])}</button>`;
+
+function vTeacher(){const d=D();
+  let h=`<input type="search" id="q" placeholder="Багшийн нэрээр хайх…" value="${esc(S.q)}" aria-label="Багш хайх">`;
+  const q=S.q.trim().toLowerCase(),list=X.tOrder.filter(t=>d.teachers[t].toLowerCase().includes(q));
+  h+=`<div class="chips">${list.map(t=>`<button class="chip" data-t="${t}" aria-pressed="${t===S.teacher}">${esc(d.teachers[t])}</button>`).join('')||'<span class="free">Олдсонгүй</span>'}</div>`;
+  if(S.teacher<0||S.teacher>=d.teachers.length)return h;
+  if(!X.used[S.day]&&!ADMIN)return h+noData();
+  const m=X.T[S.day+'|'+S.teacher]||{},n=Object.keys(m).length;
+  h+=`<div class="card"><h2>${esc(d.teachers[S.teacher])}</h2><p class="sub">${esc(d.days[S.day])} · ${n} цаг${ADMIN?' · нүдийг засахдаа ✎, нэмэхдээ ＋ дарна':''}</p>`+
+    blocks(p=>{const ids=m[p]||[];let r=ids.map(i=>{const l=d.L[i];
+        if(ADMIN&&S.edit&&S.edit.i===i)return editForm();
+        return `<div class="les"><button class="pill" data-cls="${esc(clsList(l[3])[0]||'')}">${esc(l[3])||'?'}</button><span class="meta">${lesMeta(l)}</span>${ADMIN?`<button class="mini" data-edit="${i}" aria-label="Засах">✎</button>`:''}</div>`}).join('');
+      if(ADMIN){r+=S.edit&&S.edit.i<0&&S.edit.p===p?editForm():`<button class="mini" data-add="${p}" aria-label="Хичээл нэмэх">＋</button>`}
+      return r||'<span class="free">—</span>'})+'</div>';
+  return h}
+
+function vClass(){const d=D(),grades=[...new Set(X.classes.map(c=>parseInt(c)||0))];
+  if(!X.classes.length)return '<div class="card emptymsg">Анги бүртгэгдээгүй байна.</div>';
+  if(S.grade==null||!grades.includes(S.grade))S.grade=S.cls?parseInt(S.cls)||0:grades[0];
+  let h=`<div class="label">Анги</div><div class="chips">${grades.map(g=>`<button class="chip" data-grade="${g}" aria-pressed="${g===S.grade}">${g||'Бусад'}</button>`).join('')}</div>`;
+  h+=`<div class="label">Бүлэг</div><div class="chips">${X.classes.filter(c=>(parseInt(c)||0)===S.grade).map(c=>`<button class="chip" data-cls="${esc(c)}" aria-pressed="${c===S.cls}">${esc(c)}</button>`).join('')}</div>`;
+  if(!S.cls||!X.classes.includes(S.cls))return h;
+  if(!X.used[S.day])return h+noData();
+  const m=X.C[S.day+'|'+S.cls]||{},n=Object.keys(m).length;
+  h+=`<div class="card"><h2>${esc(S.cls)} анги</h2><p class="sub">${esc(d.days[S.day])} · ${n} цаг</p>`+
+    blocks(p=>(m[p]||[]).map(i=>{const l=d.L[i];return `<div class="les">${tBtn(l[0])}<span class="meta">${lesMeta(l)}</span></div>`}).join('')||'<span class="free">—</span>',
+      g=>n===0||g.p.some(p=>m[p]))+'</div>';
+  return h}
+
+function vSlot(){const d=D();
+  if(!d.periods.length)return '<div class="card emptymsg">Цаг бүртгэгдээгүй байна.</div>';
+  if(S.slot<0||S.slot>=d.periods.length)S.slot=0;
+  let h=`<div class="label">Цаг</div><div class="chips"><button class="chip" data-act="now">Одоо</button>`+
+    d.periods.map((P,i)=>`<button class="chip" data-slot="${i}" aria-pressed="${i===S.slot}">${esc(P.s)}</button>`).join('')+'</div>';
+  if(!X.used[S.day])return h+noData();
+  const i=S.slot,P=d.periods[i],g=X.groups[X.pg[i]],byC={},busy=new Set(),near=[],other=[];
+  d.L.forEach(l=>{if(l[1]===S.day&&l[2]===i){busy.add(l[0]);const k=l[3]||'?';(byC[k]=byC[k]||[]).push(l)}});
+  X.tOrder.forEach(t=>{if(busy.has(t))return;const m=X.T[S.day+'|'+t]||{};(g.p.some(p=>m[p])?near:other).push(t)});
+  const keys=Object.keys(byC).sort((a,b)=>clsKey(a)-clsKey(b)||a.localeCompare(b));
+  h+=`<div class="card ${X.pg[i]%2?'s2':''}"><h2>${esc(d.days[S.day])} · ${esc(P.s)}-р цаг</h2><p class="sub">${P.a?esc(P.a)+'–'+esc(P.b)+' · ':''}${keys.length} анги хичээлтэй</p><table>`+
+    keys.map(c=>`<tr><td><button class="pill" data-cls="${esc(clsList(c)[0]||'')}">${esc(c)}</button></td><td>${byC[c].map(l=>`<div class="les">${tBtn(l[0])}<span class="meta">${lesMeta(l)}</span></div>`).join('')}</td></tr>`).join('')+'</table></div>';
+  const nm=l=>l.length?`<div class="names">${l.map(tBtn).join('')}</div>`:'<span class="free">Байхгүй</span>';
+  h+=`<div class="card"><h2>Сул багш нар</h2><p class="sub">Энэ ээлжид өөр цагт хичээлтэй, энэ цагт сул (${near.length})</p>${nm(near)}
+    <p class="sub" style="margin-top:14px">Энэ ээлжид огт хичээлгүй (${other.length})</p>${nm(other)}</div>`;
+  return h}
+
+function render(focusQ){const d=D();
+  $('h-title').textContent=d.title||'Хичээлийн хуваарь';$('h-sub').textContent=d.sub||'';
+  $('h-note').innerHTML=d.note?`<div class="note">${esc(d.note)}</div>`:'';
+  $('f-upd').textContent=d.updated?'Шинэчилсэн: '+d.updated:'';$('f-adm').hidden=ADMIN;
+  if(S.day>=d.days.length)S.day=0;
+  document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===S.tab));
+  $('days').innerHTML=d.days.map((n,i)=>`<button class="chip${X.used[i]?'':' empty'}" data-day="${i}" aria-pressed="${i===S.day}">${esc(n)}</button>`).join('');
+  $('view').innerHTML=S.tab==='teacher'?vTeacher():S.tab==='class'?vClass():vSlot();
+  if(focusQ){const q=$('q');if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}}
+  const ec=$('e-c');if(ec&&S.edit&&S.edit.fresh){ec.focus();S.edit.fresh=false}}
+
+/* ---------- админ ---------- */
+const GH=Object.assign({owner:'',repo:'',path:DATA_FILE,token:''},(()=>{const o={};
+  if(location.hostname.endsWith('.github.io')){o.owner=location.hostname.split('.')[0];const seg=location.pathname.split('/').filter(Boolean);
+    if(seg.length&&!seg[seg.length-1].includes('.')||seg.length>1){o.repo=seg[0];const dir=seg.slice(1).filter(s=>!s.includes('.')).join('/');o.path=(dir?dir+'/':'')+DATA_FILE}
+    else o.repo=o.owner+'.github.io'}
+  try{Object.assign(o,JSON.parse(ls.get('tt-gh')||'{}'))}catch(e){}return o})());
+const det=(id,title,body)=>`<details data-det="${id}"${S.open[id]?' open':''}><summary>${title}</summary>${body}</details>`;
+function renderAdmin(){const el=$('admin');el.hidden=!ADMIN;if(!ADMIN){el.innerHTML='';return}
+  const d=DRAFT,dirty=JSON.stringify(DRAFT)!==JSON.stringify(PUB);
+  let imp=`<p>aSc Timetables дээр <b>Файл → Экспорт → aSc Timetables XML</b> гэж гаргасан файлыг сонгоно. Оруулахад бүх өдөр, багш, цаг шинээр солигдоно.</p>
+    <div class="fields"><label class="wide">XML файл<input type="file" id="ascfile" accept=".xml,text/xml,application/xml"></label>
+    <label>Багшийн нэр<select id="asc-tn"><option value="auto">Автомат</option><option value="short">Товч нэр</option><option value="name">Бүтэн нэр</option></select></label></div>`;
+  if(PENDING)imp+=`<div class="msg">Файлаас уншсан: <b>${PENDING.teachers.length}</b> багш, <b>${new Set(PENDING.L.flatMap(l=>clsList(l[3]))).size}</b> анги, <b>${PENDING.L.length}</b> цаг, ${PENDING.days.length} өдөр × ${PENDING.periods.length} цаг.</div>
+    <div class="btns"><button class="btn pri" data-act="imp-apply">Хуваарийг солих</button><button class="btn" data-act="imp-cancel">Болих</button></div>`;
+  const gen=`<div class="fields"><label class="wide">Гарчиг<input data-f="title" value="${esc(d.title)}"></label><label class="wide">Дэд гарчиг<input data-f="sub" value="${esc(d.sub)}"></label><label class="wide">Анхааруулга (хоосон бол харагдахгүй)<input data-f="note" value="${esc(d.note)}"></label></div>
+    <table class="ptab"><tr><td class="meta">Цаг</td><td class="meta">Эхлэх</td><td class="meta">Дуусах</td></tr>`+
+    d.periods.map((P,i)=>`<tr><td><input data-p="${i}" data-k="s" value="${esc(P.s)}" aria-label="Цагийн нэр"></td><td><input type="time" data-p="${i}" data-k="a" value="${esc(P.a)}" aria-label="Эхлэх"></td><td><input type="time" data-p="${i}" data-k="b" value="${esc(P.b)}" aria-label="Дуусах"></td></tr>`).join('')+
+    `</table><div class="btns"><button class="btn" data-act="p-add">＋ Цаг нэмэх</button></div><p>Цагийн нэрийг «1.3», «2.5» гэж цэгтэй бичвэл ээлжээр бүлэглэнэ.</p>`;
+  const sel=S.teacher>=0&&S.teacher<d.teachers.length;
+  const tch=`<div class="form"><input id="t-new" placeholder="Шинэ багшийн нэр" aria-label="Шинэ багшийн нэр"><button class="btn" data-act="t-add">Нэмэх</button></div>`+
+    (sel?`<div class="form"><input id="t-ren" value="${esc(d.teachers[S.teacher])}" aria-label="Багшийн нэр"><button class="btn" data-act="t-ren">Нэр засах</button><button class="btn bad" data-act="t-del">${S.confirmDel?'Итгэлтэй байна уу? Устгах':'Багшийг устгах'}</button></div>`:'<p>Нэр засах, устгахын тулд доорх жагсаалтаас багшаа сонгоно.</p>')+
+    `<p>Хичээл нэмэх, засахдаа «Багш» хэсгээс багш, өдрөө сонгоод цагийн мөрөн дэх ✎ эсвэл ＋ товчийг дарна.</p>`;
+  const pub=`<p>Өөрчлөлт одоогоор зөвхөн энэ төхөөрөмж дээрх ноорогт байна. Бүх хүнд харагдуулахын тулд <b>${DATA_FILE}</b> файлыг GitHub дээр шинэчилнэ.</p>
+    <div class="fields"><label>GitHub хэрэглэгч<input data-g="owner" value="${esc(GH.owner)}"></label><label>Repo<input data-g="repo" value="${esc(GH.repo)}"></label><label>Файлын зам<input data-g="path" value="${esc(GH.path)}"></label><label class="wide">Токен (зөвхөн энэ төхөөрөмжид хадгалагдана)<input type="password" data-g="token" value="${esc(GH.token)}" autocomplete="off"></label></div>
+    <div class="btns"><button class="btn pri" data-act="gh-save">GitHub-д хадгалах</button><button class="btn" data-act="dl">Файлаар татах</button><button class="btn bad" data-act="discard">Ноорог хаях</button></div>
+    <p>Токен авах: GitHub → Settings → Developer settings → Fine-grained tokens → зөвхөн энэ repo-г сонгоод «Contents: Read and write» эрх өгнө. Токенгүй бол файлаар татаж аваад repo руугаа гараар хуулж болно.</p>`;
+  el.innerHTML=`<div class="bar"><span>Админ горим${dirty?' · нийтлээгүй өөрчлөлттэй':''}</span><button data-act="admin-off">Гарах</button></div><div class="body">`+
+    (S.msg?`<div class="msg${S.msg.err?' err':''}" role="status">${esc(S.msg.t)}</div>`:'')+
+    det('imp','aSc файл оруулах',imp)+det('gen','Гарчиг, хонхны цаг',gen)+det('tch','Багш нэмэх, засах',tch)+det('pub','Нийтлэх',pub)+'</div>'}
+function commit(msg){DRAFT.updated=new Date().toISOString().slice(0,10);ls.set('tt-draft',JSON.stringify(DRAFT));if(msg!==undefined)S.msg=msg?{t:msg}:null;reindex();renderAdmin();render()}
+const fail=t=>{S.msg={t,err:true};renderAdmin()};
+
+/* ---------- aSc XML ---------- */
+const badness=t=>(t.match(/\uFFFD|пїЅ|ï¿½/g)||[]).length*10+(t.match(/[РСÐÑ][\u0080-\u04FF]/g)||[]).length;
+function decode(buf){const u=new Uint8Array(buf);
+  if(u[0]===0xFF&&u[1]===0xFE)return new TextDecoder('utf-16le').decode(u);
+  if(u[0]===0xFE&&u[1]===0xFF)return new TextDecoder('utf-16be').decode(u);
+  let head='';for(let i=0;i<Math.min(200,u.length);i++)head+=String.fromCharCode(u[i]);
+  const m=/encoding=["']([\w-]+)["']/i.exec(head),list=[];
+  if(m)list.push(m[1]);for(const e of ['utf-8','windows-1251'])if(list.indexOf(e)<0)list.push(e);
+  let best=null;
+  for(const e of list){let t;try{t=new TextDecoder(e).decode(u)}catch(x){continue}
+    const b=badness(t);if(!best||b<best.b)best={t,b};if(b===0)break}
+  return best?best.t:new TextDecoder('utf-8').decode(u)}
+function parseAsc(text,nameMode){
+  const doc=new DOMParser().parseFromString(text,'application/xml');
+  if(doc.getElementsByTagName('parsererror').length)throw new Error('XML файлыг уншиж чадсангүй.');
+  const all=t=>[...doc.getElementsByTagName(t)],A=(e,n)=>(e.getAttribute(n)||'').trim(),ids=s=>s.split(',').map(x=>x.trim()).filter(Boolean);
+  const hm=s=>{const m=/^(\d{1,2}):(\d{2})/.exec(s);return m?m[1].padStart(2,'0')+':'+m[2]:''};
+  const MN={v:'ү',Y:'Ү',e:'ө',E:'Ө'};
+  const fx=s=>String(s==null?'':s).replace(/\S+/g,w=>/[\u0400-\u04FF]/.test(w)?w.replace(/[vYeE]/g,c=>MN[c]):w);
+  const cards=all('card');if(!cards.length)throw new Error('Энэ файлд хуваарийн карт (card) алга. aSc Timetables XML экспорт мөн эсэхийг шалгана уу.');
+  const pEls=all('period'),pMap={};
+  const periods=pEls.map((e,i)=>{const n=A(e,'period')||A(e,'name')||String(i+1);pMap[n]=i;return {s:A(e,'short')||A(e,'name')||n,a:hm(A(e,'starttime')),b:hm(A(e,'endtime'))}});
+  pEls.forEach((e,i)=>{for(const k of [A(e,'name'),A(e,'short')])if(k&&!(k in pMap))pMap[k]=i});
+  // өдрүүд
+  let days=[];const defs=all('daysdef').filter(e=>/^[01]+$/.test(A(e,'days'))&&A(e,'days').split('1').length===2);
+  if(defs.length){const n=A(defs[0],'days').length;days=WD.slice(0,n).concat(Array(Math.max(0,n-7)).fill('')).map((x,i)=>x||'Өдөр '+(i+1));
+    for(const e of defs){const i=A(e,'days').indexOf('1'),nm=A(e,'name');if(nm)days[i]=fx(nm)}}
+  const oldDay=cards.some(c=>c.hasAttribute('day')&&!c.hasAttribute('days'));let base=0;
+  if(oldDay){const v=cards.map(c=>parseInt(A(c,'day'))).filter(n=>!isNaN(n)),mn=Math.min(...v),mx=Math.max(...v);base=mn===0?0:1;
+    if(!days.length){const de=all('day');days=WD.slice(0,Math.max(mx-base+1,5));de.forEach(e=>{const i=parseInt(A(e,'day'))-base,nm=A(e,'name');if(nm&&i>=0&&i<days.length)days[i]=nm})}}
+  if(!days.length)days=WD.slice(0,5);
+  const dict=(tag)=>{const m={};all(tag).forEach(e=>m[A(e,'id')]=e);return m};
+  const subj=dict('subject'),cls=dict('class'),room=dict('classroom'),les=dict('lesson');
+  const tEls=all('teacher'),tIdx={};
+  const dotted=tEls.filter(e=>A(e,'short').includes('.')).length>tEls.length/2;
+  const useShort=nameMode==='short'||(nameMode==='auto'&&dotted);
+  const teachers=tEls.map((e,i)=>{tIdx[A(e,'id')]=i;const full=A(e,'name')||[A(e,'firstname'),A(e,'lastname')].filter(Boolean).join(' ');return fx((useShort?A(e,'short')||full:full||A(e,'short'))||'Багш '+(i+1))});
+  const lab=(m,list,k)=>list.map(i=>m[i]?fx(A(m[i],k)||A(m[i],'name')||A(m[i],'short')):'').filter(Boolean);
+  const L=[];let skipped=0;
+  for(const c of cards){const l=les[A(c,'lessonid')];if(!l){skipped++;continue}
+    const pi=pMap[A(c,'period')];let dl=[];
+    if(c.hasAttribute('days')){const s=A(c,'days');for(let i=0;i<s.length;i++)if(s[i]==='1')dl.push(i)}
+    else if(c.hasAttribute('day')){const n=parseInt(A(c,'day'));if(!isNaN(n))dl.push(n-base)}
+    if(pi===undefined||!dl.length){skipped++;continue}
+    const dur=Math.max(1,parseInt(A(l,'durationperiods')||A(l,'periodspercard'))||1);
+    const cl=lab(cls,ids(A(l,'classids')||A(l,'classid')),'short').join(', ');
+    const sb=lab(subj,ids(A(l,'subjectid')),'name').join(', ');
+    const rm=lab(room,ids(A(c,'classroomids')||A(c,'classroomid')||A(l,'classroomids')),'short').join('/');
+    for(const tid of ids(A(l,'teacherids')||A(l,'teacherid'))){const t=tIdx[tid];if(t===undefined)continue;
+      for(const dy of dl)for(let k=0;k<dur&&pi+k<periods.length;k++)if(dy>=0&&dy<days.length)L.push([t,dy,pi+k,cl,sb,rm])}}
+  if(!L.length)throw new Error('Файлаас нэг ч цаг уншигдсангүй. Хуваарь байрлуулсан (бодогдсон) файл эсэхийг шалгана уу.');
+  return {days,periods,teachers,L,skipped}}
+
+/* ---------- нийтлэх ---------- */
+const outJSON=()=>JSON.stringify(DRAFT);
+function b64(str){const u=new TextEncoder().encode(str);let s='';for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s)}
+async function ghSave(){
+  if(!GH.owner||!GH.repo||!GH.path||!GH.token)return fail('GitHub хэрэглэгч, repo, файлын зам, токеноо бөглөнө үү.');
+  S.msg={t:'Хадгалж байна…'};renderAdmin();
+  try{const url=`https://api.github.com/repos/${encodeURIComponent(GH.owner)}/${encodeURIComponent(GH.repo)}/contents/${GH.path.split('/').map(encodeURIComponent).join('/')}`;
+    const hd={Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json'};
+    let sha;const r=await fetch(url,{headers:hd,cache:'no-store'});
+    if(r.ok)sha=(await r.json()).sha;else if(r.status!==404)throw new Error(r.status===401?'Токен буруу эсвэл хугацаа нь дууссан.':'GitHub алдаа '+r.status);
+    const p=await fetch(url,{method:'PUT',headers:hd,body:JSON.stringify({message:'Хичээлийн хуваарь шинэчлэв',content:b64(outJSON()),sha})});
+    if(!p.ok)throw new Error(p.status===403||p.status===404?'Энэ repo-д бичих эрхгүй байна. Токены эрхийг шалгана уу.':'GitHub алдаа '+p.status);
+    PUB=clone(DRAFT);ls.del('tt-draft');S.msg={t:'Хадгаллаа. 1–2 минутын дараа бүх хүнд шинэ хуваарь харагдана.'};renderAdmin();render()
+  }catch(e){fail('Хадгалж чадсангүй: '+(e.message==='Failed to fetch'?'GitHub руу холбогдож чадсангүй (энэ хуудас GitHub Pages дээр байх ёстой).':e.message))}}
+async function download(){const data=JSON.stringify(DRAFT,null,1);
+  try{const dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null;
+    if(dl){await dl.save({filename:DATA_FILE,data});S.msg={t:DATA_FILE+' файлыг татлаа. Repo доторх хуучин файлын оронд хуулна.'};return renderAdmin()}
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));a.download=DATA_FILE;document.body.appendChild(a);a.click();a.remove();
+    S.msg={t:DATA_FILE+' файлыг татлаа. Repo доторх хуучин файлын оронд хуулна.'};renderAdmin()
+  }catch(e){fail('Файл татаж чадсангүй.')}}
+
+/* ---------- үйлдлүүд ---------- */
+function adminOn(){let d=null;try{d=JSON.parse(ls.get('tt-draft')||'null')}catch(e){}
+  DRAFT=d&&Array.isArray(d.L)?d:clone(PUB);ADMIN=true;S.msg=null;S.edit=null;reindex();renderAdmin();render()}
+function adminOff(){ADMIN=false;S.edit=null;PENDING=null;reindex();renderAdmin();render()}
+const ACT={
+  'admin-on':adminOn,'admin-off':adminOff,
+  now(){const n=nowSlot();if(n>=0)S.slot=n;const t=today();if(t>=0&&X.used[t])S.day=t;render()},
+  'e-cancel'(){S.edit=null;render()},
+  'e-save'(){const v=[$('e-c').value.trim(),$('e-s').value.trim(),$('e-r').value.trim()],e=S.edit;
+    if(!v[0]&&!v[1])return;if(e.i>=0)DRAFT.L[e.i].splice(3,3,...v);else DRAFT.L.push([S.teacher,S.day,e.p,...v]);S.edit=null;commit()},
+  'e-del'(){DRAFT.L.splice(S.edit.i,1);S.edit=null;commit()},
+  'imp-apply'(){const keep={title:DRAFT.title,sub:DRAFT.sub,note:''};const sk=PENDING.skipped;delete PENDING.skipped;
+    DRAFT=Object.assign(keep,PENDING);PENDING=null;S.teacher=-1;S.cls=null;S.grade=null;S.slot=0;S.day=0;S.open.imp=false;S.open.pub=true;
+    commit('Хуваарь солигдлоо'+(sk?` (байрлуулаагүй ${sk} картыг алгассан)`:'')+'. Шалгаад «Нийтлэх» хэсгээс хадгална уу.')},
+  'imp-cancel'(){PENDING=null;renderAdmin()},
+  'p-add'(){DRAFT.periods.push({s:String(DRAFT.periods.length+1),a:'',b:''});commit()},
+  't-add'(){const n=$('t-new').value.trim();if(!n)return;DRAFT.teachers.push(n);S.teacher=DRAFT.teachers.length-1;S.tab='teacher';S.q='';commit()},
+  't-ren'(){const n=$('t-ren').value.trim();if(!n)return;DRAFT.teachers[S.teacher]=n;commit()},
+  't-del'(){if(!S.confirmDel){S.confirmDel=true;return renderAdmin()}
+    const t=S.teacher;DRAFT.teachers.splice(t,1);DRAFT.L=DRAFT.L.filter(l=>l[0]!==t);DRAFT.L.forEach(l=>{if(l[0]>t)l[0]--});S.teacher=-1;S.confirmDel=false;commit()},
+  'gh-save':ghSave,dl:download,
+  discard(){ls.del('tt-draft');DRAFT=clone(PUB);S.edit=null;S.teacher=-1;commit(null);ls.del('tt-draft');S.msg={t:'Ноорогийг хаяж, нийтлэгдсэн хуваарь руу буцлаа.'};renderAdmin()}
+};
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+  if(d.act){if(d.act!=='t-del')S.confirmDel=false;return ACT[d.act]&&ACT[d.act]()}
+  S.edit=null;
+  if(d.tab)S.tab=d.tab;
+  else if(d.day)S.day=+d.day;
+  else if(d.t){S.teacher=+d.t;S.tab='teacher';S.q='';S.confirmDel=false;if(ADMIN)renderAdmin()}
+  else if(d.grade){S.grade=+d.grade;S.cls=null}
+  else if(d.cls){if(!d.cls)return;S.cls=d.cls;S.grade=parseInt(d.cls)||0;S.tab='class'}
+  else if(d.slot)S.slot=+d.slot;
+  else if(d.edit)S.edit={i:+d.edit,fresh:true};
+  else if(d.add)S.edit={i:-1,p:+d.add,fresh:true};
+  else return;
+  render()});
+document.addEventListener('input',e=>{if(e.target.id==='q'){S.q=e.target.value;render(true)}});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.closest&&e.target.closest('.form')){const b=e.target.closest('.form').querySelector('.btn');if(b)b.click()}});
+document.addEventListener('toggle',e=>{const k=e.target.dataset&&e.target.dataset.det;if(k)S.open[k]=e.target.open},true);
+document.addEventListener('change',e=>{const t=e.target,d=t.dataset;
+  if(d.f){DRAFT[d.f]=t.value.trim();commit()}
+  else if(d.p){DRAFT.periods[+d.p][d.k]=t.value.trim();commit()}
+  else if(d.g){GH[d.g]=t.value.trim();ls.set('tt-gh',JSON.stringify(GH))}
+  else if(t.id==='ascfile'&&t.files[0]){const mode=$('asc-tn').value,fr=new FileReader();
+    fr.onload=()=>{try{PENDING=parseAsc(decode(fr.result),mode);S.msg=null;renderAdmin()}catch(x){PENDING=null;fail(x.message)}};
+    fr.onerror=()=>fail('Файлыг уншиж чадсангүй.');fr.readAsArrayBuffer(t.files[0])}});
+
+/* ---------- эхлэл ---------- */
+(async()=>{let err=null;
+  try{const r=await fetch(DATA_FILE,{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();if(!Array.isArray(j.L))throw 0;PUB=Object.assign(blank(),j)}catch(e){err=true}
+  reindex();const t=today();S.day=t>=0&&X.used[t]?t:Math.max(0,X.used.findIndex(n=>n));S.slot=Math.max(0,nowSlot());
+  render();if(err)$('view').innerHTML='<div class="card emptymsg">Хуваарийн файл ('+DATA_FILE+') олдсонгүй. «Админ» хэсгээс хуваариа оруулна уу.</div>'})();
+</script>
+</body>
+</html>
