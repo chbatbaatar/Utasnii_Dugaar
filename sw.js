@@ -1,5 +1,5 @@
-const V='altan-v2';
-const SHELL=['./','./index.html','./schedule.html','./manifest.json','./logo-sm.png','./icon-192.png','./icon-512.png','./apple-touch-icon.png','./data.json','./schedule.json','./zurkhai.json'];
+const V='altan-v3';
+const SHELL=['./','./index.html','./schedule.html','./stats.html','./manifest.json','./logo-sm.png','./icon-192.png','./icon-512.png','./apple-touch-icon.png','./data.json','./schedule.json','./zurkhai.json'];
 const key=u=>new Request(u.origin+u.pathname);
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>Promise.allSettled(SHELL.map(u=>c.add(u)))).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});

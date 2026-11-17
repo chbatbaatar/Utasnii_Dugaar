@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Хуваарийн шинжилгээ</title>
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#14307f">
+<style>
+:root{--bg:#f4f6f5;--card:#fff;--ink:#17201d;--mute:#64716c;--line:#dfe5e2;--acc:#0b6b5c;--acc-soft:#dff1ec;--s2:#8a4b12;--warn:#fff4d6;--warn-ink:#6b5200;--bad:#b3261e;--bad-soft:#fde8e6;--sh1:#efb036;--sh2:#3d8fd1;--ok:#178a5a}
+@media (prefers-color-scheme:dark){:root{--bg:#111614;--card:#1a211f;--ink:#e8eeeb;--mute:#93a19b;--line:#2b3531;--acc:#5cc9b4;--acc-soft:#17352f;--s2:#e8a765;--warn:#3a3114;--warn-ink:#f0d98a;--bad:#ff8a80;--bad-soft:#3a1e1c;--sh1:#e8b04a;--sh2:#5aa3e0;--ok:#4fd39a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:16px 14px 56px}
+.apptabs{display:flex;gap:6px;margin:0 0 14px}
+.apptabs a{flex:1;text-align:center;padding:10px 4px;border-radius:11px;text-decoration:none;font-weight:600;font-size:.9rem;background:var(--card);border:1px solid var(--line);color:var(--mute)}
+.apptabs a[aria-current]{background:var(--acc);border-color:var(--acc);color:var(--card)}
+.apphead{display:flex;gap:10px;align-items:center}
+.applogo{height:44px;background:#fff;border-radius:9px;padding:4px;flex:none}
+h1{font-size:1.25rem;margin:0 0 2px}
+.apphead p{margin:0;color:var(--mute);font-size:.88rem}
+.tabs{display:flex;gap:6px;margin:14px 0 10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:4px}
+.tabs button{flex:1;border:0;background:none;color:var(--mute);font:inherit;font-weight:600;font-size:.92rem;padding:9px 4px;border-radius:9px;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--acc);color:var(--card)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:12px}
+.card h2{font-size:1.05rem;margin:0 0 2px}
+.sub{color:var(--mute);font-size:.86rem;margin:0 0 10px}
+.emptymsg{color:var(--mute);padding:26px 4px;text-align:center}
+input,select{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:9px;padding:8px 10px;min-width:0}
+input[type=search]{width:100%}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:12px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 13px;position:relative;overflow:hidden}
+.tile b{display:block;font-size:1.75rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.tile span{color:var(--mute);font-size:.8rem;display:block;margin-top:2px}
+.tile i{position:absolute;right:-6px;top:-10px;font-size:3rem;font-style:normal;opacity:.13}
+.tile.a b{color:var(--acc)}.tile.y b{color:var(--sh1)}.tile.b b{color:var(--sh2)}.tile.r b{color:var(--bad)}
+.rowi{display:flex;align-items:center;gap:9px;padding:7px 0;border-top:1px solid var(--line)}
+.rowi:first-of-type{border-top:0}
+.nm{flex:1;min-width:0;font-size:.92rem}
+.nm small{display:block;color:var(--mute);font-size:.76rem}
+.val{font-variant-numeric:tabular-nums;font-weight:700;width:46px;text-align:right;font-size:.95rem}
+.bar{flex:2.1;min-width:90px;height:16px;border-radius:8px;background:var(--bg);display:flex;overflow:hidden;border:1px solid var(--line)}
+.bar i{display:block;width:0;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.bar i.s1{background:var(--sh1)}.bar i.s2{background:var(--sh2)}
+.bar i.one{background:var(--acc)}
+.lg{display:inline-flex;align-items:center;gap:5px;font-size:.8rem;color:var(--mute);margin-right:12px}
+.lg s{width:12px;height:12px;border-radius:3px;display:inline-block}
+.det{background:var(--bg);border-radius:10px;padding:10px;margin:2px 0 8px;font-size:.86rem}
+.det b{color:var(--acc)}
+.mini{display:flex;gap:4px;margin:6px 0 2px;align-items:flex-end;height:46px}
+.mini div{flex:1;background:var(--acc-soft);border-radius:5px 5px 0 0;position:relative;height:0;transition:height .7s cubic-bezier(.2,.8,.2,1)}
+.mini div.hi{background:var(--acc)}
+.mini span{position:absolute;bottom:-17px;left:0;right:0;text-align:center;font-size:.68rem;color:var(--mute)}
+.minilab{height:16px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:.84rem;padding:5px 10px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:var(--card);font-weight:600}
+.chip.free{background:var(--acc-soft);border-color:var(--acc-soft);color:var(--acc);font-weight:600;cursor:default}
+.hm{overflow-x:auto}
+table.hm2{border-collapse:separate;border-spacing:3px;width:100%;min-width:430px}
+.hm2 th{font-size:.72rem;color:var(--mute);font-weight:600;padding:0 2px}
+.hm2 td{text-align:center;border-radius:6px;font-size:.74rem;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.4);height:26px;opacity:0;transform:scale(.8);transition:opacity .4s,transform .4s;font-variant-numeric:tabular-nums}
+.hm2 td.z{background:var(--bg)!important;color:var(--mute);text-shadow:none}
+.hm2 th.rw{text-align:right;white-space:nowrap}
+.cf{border-left:4px solid var(--bad);background:var(--bad-soft);border-radius:9px;padding:8px 10px;margin-top:7px;font-size:.87rem}
+.cf.warn{border-left-color:var(--sh1);background:var(--warn);color:var(--warn-ink)}
+.cf b{display:block}
+.cf small{opacity:.85}
+.sec{margin-top:14px}
+.sec h3{font-size:.95rem;margin:0 0 4px;display:flex;align-items:center;gap:8px}
+.pill{background:var(--acc-soft);color:var(--acc);border-radius:999px;font-size:.78rem;padding:1px 9px;font-weight:700}
+.pill.r{background:var(--bad-soft);color:var(--bad)}
+.pill.y{background:var(--warn);color:var(--warn-ink)}
+.ok{color:var(--ok);font-weight:600}
+.more{font:inherit;background:none;border:0;color:var(--acc);font-weight:600;cursor:pointer;padding:8px 0 0}
+.flex{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.flex>select{flex:1;min-width:120px}
+@media (max-width:540px){.rowi{flex-wrap:wrap;gap:6px}.nm{flex:1 1 100%}.bar{flex:1;min-width:0}.val{width:38px}}
+@media (prefers-reduced-motion:reduce){.bar i,.mini div,.hm2 td{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="apptabs"><a href="index.html">📞 Дугаар</a><a href="schedule.html">📅 Хуваарь</a><a href="stats.html" aria-current="page">📊 Шинжилгээ</a></nav>
+<header class="apphead"><img class="applogo" src="logo-sm.png" alt=""><div><h1>Хуваарийн шинжилгээ</h1><p id="sub"></p></div></header>
+<div class="tabs" role="tablist">
+<button role="tab" data-tab="load" aria-selected="true">Багшийн ачаалал</button>
+<button role="tab" data-tab="room" aria-selected="false">Кабинет</button>
+<button role="tab" data-tab="check" aria-selected="false">Шалгалт</button>
+</div>
+<div id="view"><div class="emptymsg">Ачаалж байна…</div></div>
+</div>
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const clsList=c=>String(c||'').split(',').map(s=>s.trim()).filter(Boolean);
+const rmList=r=>String(r||'').split('/').map(s=>s.trim()).filter(Boolean);
+const DN=['Даваа','Мягмар','Лхагва','Пүрэв','Баасан'];
+const DS=['Да','Мя','Лх','Пү','Ба'];
+let D=null,P=[],ND=5,T=[],R=[],C=[],CF=null,HM=null;
+const S={tab:'load',q:'',sort:'h',open:-1,day:0,per:-1,all:{}};
+
+/* ---------- тооцоолол ---------- */
+const pinfo=i=>P[i]||{sh:'',num:'?',label:'?'};
+function gaps(idxs){ // нэг өдрийн цагийн индексүүд -> ээлж тус бүрийн цонх
+  const by={};idxs.forEach(i=>{const p=pinfo(i);(by[p.sh]=by[p.sh]||[]).push(parseFloat(p.num)||0)});
+  let g=0;for(const k in by){const a=by[k].sort((x,y)=>x-y);if(a.length<2)continue;
+    g+=(a[a.length-1]-a[0]+1)-new Set(a).size}
+  return g}
+function build(){
+  P=D.periods.map(p=>{const s=String(p.s||''),k=s.indexOf('.');
+    return k>0?{sh:s.slice(0,k),num:s.slice(k+1),a:p.a||'',label:s}:{sh:'',num:s,a:p.a||'',label:s}});
+  ND=Math.min(5,D.days.length||5);
+  T=D.teachers.map((n,i)=>({i,n,h:0,s1:0,s2:0,d:Array(ND).fill(0),subj:{},cls:{},gap:0,slots:{}}));
+  const rm={},cl={},ts={},rs={},cs={};
+  HM=Array.from({length:ND},()=>Array(P.length).fill(0));
+  D.L.forEach(l=>{const dy=l[1],pi=l[2],t=T[l[0]];
+    if(dy<0||dy>=ND||!P[pi])return;
+    HM[dy][pi]++;
+    if(t){t.h++;pinfo(pi).sh==='2'?t.s2++:t.s1++;t.d[dy]++;
+      if(l[4])t.subj[l[4]]=(t.subj[l[4]]||0)+1;
+      (t.slots[dy]=t.slots[dy]||[]).push(pi);
+      clsList(l[3]).forEach(c=>t.cls[c]=1);
+      (ts[l[0]+'|'+dy+'|'+pi]=ts[l[0]+'|'+dy+'|'+pi]||[]).push(l)}
+    rmList(l[5]).forEach(r=>{rm[r]=(rm[r]||0)+1;(rs[r+'|'+dy+'|'+pi]=rs[r+'|'+dy+'|'+pi]||[]).push(l)});
+    clsList(l[3]).forEach(c=>{cl[c]=(cl[c]||0)+1;(cs[c+'|'+dy+'|'+pi]=cs[c+'|'+dy+'|'+pi]||[]).push(l);
+      (C[c]=C[c]||{n:c,h:0,slots:{}}),C[c].h++,(C[c].slots[dy]=C[c].slots[dy]||[]).push(pi)})});
+  T.forEach(t=>{for(const d in t.slots)t.gap+=gaps(t.slots[d])});
+  R=Object.keys(rm).map(n=>({n,h:rm[n]})).sort((a,b)=>b.h-a.h);
+  const CL=Object.keys(C).map(k=>C[k]);
+  CL.forEach(c=>{c.gap=0;for(const d in c.slots)c.gap+=gaps(c.slots[d])});
+  CF={t:[],r:[],c:[],w:[]};
+  const pack=(m,kind)=>{const out=[];
+    for(const k in m){const v=m[k];if(v.length<2)continue;
+      const parts=k.split('|'),dy=+parts[1],pi=+parts[2];
+      const subj=new Set(v.map(x=>x[4]||''));
+      out.push({who:parts[0],dy,pi,rows:v,soft:kind!=='t'&&subj.size===1})}
+    return out.sort((a,b)=>a.dy-b.dy||a.pi-b.pi)};
+  CF.t=pack(ts,'t');CF.r=pack(rs,'r');CF.c=pack(cs,'c');
+  CF.w=CL.filter(c=>c.gap>0).sort((a,b)=>b.gap-a.gap);
+  if(S.per<0){let best=0,bi=0;P.forEach((p,i)=>{const v=HM.reduce((a,r)=>a+r[i],0);if(v>best){best=v;bi=i}});S.per=bi}
+  CF.cl=CL.sort((a,b)=>b.h-a.h);}
+
+/* ---------- анимаци ---------- */
+function anim(){requestAnimationFrame(()=>{
+  document.querySelectorAll('[data-w]').forEach(e=>{e.style.width=e.dataset.w});
+  document.querySelectorAll('[data-h]').forEach(e=>{e.style.height=e.dataset.h});
+  document.querySelectorAll('.hm2 td').forEach((e,i)=>{e.style.transitionDelay=(i%40)*14+'ms';e.style.opacity=1;e.style.transform='none'});
+  document.querySelectorAll('[data-n]').forEach(e=>{const n=+e.dataset.n,dc=+(e.dataset.dec||0),st=performance.now();
+    const step=t=>{const k=Math.min(1,(t-st)/700),v=n*(1-Math.pow(1-k,3));
+      e.textContent=dc?v.toFixed(dc):Math.round(v);if(k<1)requestAnimationFrame(step)};
+    requestAnimationFrame(step)})})}
+const tile=(cls,n,lab,ic,dec)=>`<div class="tile ${cls}"><i>${ic}</i><b data-n="${n}"${dec?' data-dec="'+dec+'"':''}>0</b><span>${esc(lab)}</span></div>`;
+const hue=(v,mx)=>mx?`hsl(${Math.round(170-150*Math.min(1,v/mx))} 72% 48%)`:'var(--bg)';
+
+/* ---------- багшийн ачаалал ---------- */
+function vLoad(){
+  const tot=T.reduce((a,b)=>a+b.h,0),act=T.filter(t=>t.h);
+  const avg=act.length?tot/act.length:0,top=act.slice().sort((a,b)=>b.h-a.h)[0];
+  let h=`<div class="tiles">${tile('a',act.length,'ажиллаж буй багш','👩‍🏫')}${tile('',tot,'нийт цаг / 7 хоног','📚')}${tile('b',avg,'дундаж ачаалал',"📈",1)}${tile('y',top?top.h:0,'хамгийн их: '+(top?top.n:'—'),'🔥')}</div>`;
+  h+=`<div class="card"><h2>Долоо хоногийн ачаалал</h2><p class="sub">Багшийн нэр дээр дарж дэлгэрэнгүйг харна</p>
+    <div class="flex"><input type="search" id="q" placeholder="Багш хайх…" value="${esc(S.q)}">
+    <select id="sort"><option value="h"${S.sort==='h'?' selected':''}>Ачаалалаар</option><option value="n"${S.sort==='n'?' selected':''}>Нэрээр</option><option value="g"${S.sort==='g'?' selected':''}>Цонхоор</option></select></div>
+    <p class="sub" style="margin:10px 0 2px"><span class="lg"><s style="background:var(--sh1)"></s>I ээлж</span><span class="lg"><s style="background:var(--sh2)"></s>II ээлж</span></p>`;
+  const q=S.q.trim().toLowerCase();
+  let list=act.filter(t=>t.n.toLowerCase().includes(q));
+  list.sort(S.sort==='n'?(a,b)=>a.n.localeCompare(b.n,'mn'):S.sort==='g'?(a,b)=>b.gap-a.gap||b.h-a.h:(a,b)=>b.h-a.h);
+  const mx=Math.max(1,...act.map(t=>t.h));
+  if(!list.length)h+='<p class="emptymsg">Олдсонгүй</p>';
+  list.forEach(t=>{
+    h+=`<div class="rowi" data-t="${t.i}" style="cursor:pointer"><div class="nm">${esc(t.n)}<small>${t.gap?'⏱ '+t.gap+' цонх · ':''}${Object.keys(t.cls).length} анги</small></div>
+      <div class="bar"><i class="s1" data-w="${(t.s1/mx*100).toFixed(1)}%"></i><i class="s2" data-w="${(t.s2/mx*100).toFixed(1)}%"></i></div><div class="val">${t.h}</div></div>`;
+    if(S.open===t.i){const dmx=Math.max(1,...t.d);
+      h+=`<div class="det"><div class="mini">${t.d.map((v,i)=>`<div class="${v===dmx&&v?'hi':''}" data-h="${v?Math.max(8,v/dmx*100):2}%"><span>${DS[i]}</span></div>`).join('')}</div><div class="minilab"></div>
+      <div>I ээлж <b>${t.s1}</b> цаг · II ээлж <b>${t.s2}</b> цаг${t.s1&&t.s2?' · <b>хоёр ээлж</b>':''}</div>
+      <div>Сул өдөр: <b>${t.d.map((v,i)=>v?null:DN[i]).filter(Boolean).join(', ')||'алга'}</b></div>
+      <div>Хамгийн ачаалалтай: <b>${DN[t.d.indexOf(dmx)]}</b> (${dmx} цаг)${t.gap?' · Цонх: <b>'+t.gap+'</b>':''}</div>
+      <div>Хичээл: ${Object.keys(t.subj).map(s=>esc(s)+' ('+t.subj[s]+')').join(', ')||'—'}</div>
+      <div>Анги: ${Object.keys(t.cls).map(esc).join(', ')||'—'}</div></div>`}});
+  h+='</div>';
+  h+=`<div class="card"><h2>Сургуулийн ачаалал</h2><p class="sub">Өдөр, цаг тус бүрийн нийт хичээл</p>${heat()}</div>`;
+  return h}
+function heat(){const mx=Math.max(1,...HM.flat());
+  let h='<div class="hm"><table class="hm2"><tr><th></th>'+P.map(p=>`<th>${esc(p.label)}</th>`).join('')+'</tr>';
+  for(let d=0;d<ND;d++){h+=`<tr><th class="rw">${DS[d]}</th>`+P.map((p,i)=>{const v=HM[d][i];
+    return `<td class="${v?'':'z'}" style="background:${v?hue(v,mx):''}">${v||''}</td>`}).join('')+'</tr>'}
+  return h+'</table></div>'}
+
+/* ---------- кабинет ---------- */
+function vRoom(){
+  const use=R.reduce((a,b)=>a+b.h,0),cap=ND*P.length;
+  const busiest=R[0];
+  let h=`<div class="tiles">${tile('a',R.length,'ашиглагдаж буй кабинет','🚪')}${tile('',use,'нийт хичээлийн цаг','🔑')}${tile('b',R.length?use/R.length:0,'нэг кабинетын дундаж','📊',1)}${tile('y',busiest?busiest.h:0,'хамгийн завгүй: '+(busiest?busiest.n:'—'),'🔥')}</div>`;
+  h+=`<div class="card"><h2>Сул кабинет хайх</h2><p class="sub">Хурал, нэмэлт хичээл товлоход</p>
+    <div class="flex"><select id="fd">${DN.slice(0,ND).map((n,i)=>`<option value="${i}"${i===S.day?' selected':''}>${n}</option>`).join('')}</select>
+    <select id="fp">${P.map((p,i)=>`<option value="${i}"${i===S.per?' selected':''}>${esc(p.label)}${p.a?' ('+esc(p.a)+')':''}</option>`).join('')}</select></div>`;
+  const busy=new Set();D.L.forEach(l=>{if(l[1]===S.day&&l[2]===S.per)rmList(l[5]).forEach(r=>busy.add(r))});
+  const free=R.filter(r=>!busy.has(r.n));
+  h+=`<p class="sub" style="margin:10px 0 4px"><b class="ok">${free.length}</b> сул · ${busy.size} ашиглагдаж байна</p>
+    <div class="chips">${free.length?free.map(r=>`<span class="chip free">${esc(r.n)}</span>`).join(''):'<span class="sub">Сул кабинет алга</span>'}</div></div>`;
+  const mx=Math.max(1,...R.map(r=>r.h));
+  h+=`<div class="card"><h2>Кабинетын ачаалал</h2><p class="sub">7 хоногт ${cap} боломжит цагаас хэд нь дүүрсэн</p>`;
+  const show=S.all.room?R:R.slice(0,15);
+  show.forEach(r=>{const pc=Math.round(r.h/cap*100);
+    h+=`<div class="rowi"><div class="nm">${esc(r.n)}<small>${pc}% дүүрсэн</small></div>
+      <div class="bar"><i class="one" data-w="${(r.h/mx*100).toFixed(1)}%"></i></div><div class="val">${r.h}</div></div>`});
+  if(R.length>15&&!S.all.room)h+=`<button class="more" data-all="room">Бүгдийг харах (${R.length})</button>`;
+  return h+'</div>'}
+
+/* ---------- шалгалт ---------- */
+function cfCard(x,label){const d=DN[x.dy],p=pinfo(x.pi);
+  return `<div class="cf${x.soft?' warn':''}"><b>${x.soft?'⚠️':'❌'} ${esc(x.who)} · ${d} ${esc(p.label)}${p.a?' ('+esc(p.a)+')':''}</b>
+    ${x.rows.map(l=>`<small>${esc(l[3]||'?')} · ${esc(l[4]||'')}${l[5]?' · каб. '+esc(l[5]):''}${label==='t'?'':' · '+esc(D.teachers[l[0]]||'')}</small>`).join('<br>')}
+    ${x.soft?'<small><i>Нэг хичээл тул бүлэг хуваасан байж болзошгүй.</i></small>':''}</div>`}
+function sec(id,title,arr,label,note){
+  const hard=arr.filter(x=>!x.soft).length,soft=arr.length-hard;
+  let h=`<div class="sec"><h3>${title} ${hard?`<span class="pill r">${hard}</span>`:''}${soft?`<span class="pill y">${soft}</span>`:''}${arr.length?'':'<span class="pill">0</span>'}</h3>`;
+  if(note)h+=`<p class="sub">${note}</p>`;
+  if(!arr.length)return h+'<p class="sub ok">✓ Алдаа олдсонгүй</p></div>';
+  const show=S.all[id]?arr:arr.slice(0,6);
+  h+=show.map(x=>cfCard(x,label)).join('');
+  if(arr.length>6&&!S.all[id])h+=`<button class="more" data-all="${id}">Үлдсэн ${arr.length-6}-г харах</button>`;
+  return h+'</div>'}
+function vCheck(){
+  const th=CF.t.length,rh=CF.r.filter(x=>!x.soft).length,rs=CF.r.length-rh,ch=CF.c.filter(x=>!x.soft).length,cs=CF.c.length-ch;
+  const gap=CF.w.reduce((a,b)=>a+b.gap,0);
+  let h=`<div class="tiles">${tile(th?'r':'a',th,'багшийн давхцал','👤')}${tile(rh?'r':'a',rh,'кабинетын давхцал','🚪')}${tile(ch?'r':'a',ch,'ангийн давхцал','🏫')}${tile(gap?'y':'a',gap,'ангийн цонх','⏱')}</div>`;
+  h+=`<div class="card">`;
+  h+=sec('t','Багшийн давхцал',CF.t,'t','Нэг багш нэг цагт хоёр газар хичээл орохоор товлогдсон.');
+  h+=sec('r','Кабинетын давхцал',CF.r,'r','Нэг кабинетад нэг цагт хоёр хичээл. Шар өнгөтэй нь нэг ижил хичээл тул бүлэг хуваасан байж магадгүй.');
+  h+=sec('c','Ангийн давхцал',CF.c,'c','Нэг анги нэг цагт хоёр хичээлтэй. Шар өнгөтэй нь бүлгээр хуваасан хичээл байж магадгүй.');
+  h+=`<div class="sec"><h3>Ангийн цонх ${gap?`<span class="pill y">${gap}</span>`:'<span class="pill">0</span>'}</h3>
+    <p class="sub">Нэг ээлжийн дотор хичээл хоорондоо тасарсан цаг</p>`;
+  if(!CF.w.length)h+='<p class="sub ok">✓ Цонх алга</p>';
+  else{const show=S.all.w?CF.w:CF.w.slice(0,10);
+    const mx=Math.max(1,...CF.w.map(c=>c.gap));
+    show.forEach(c=>{h+=`<div class="rowi"><div class="nm">${esc(c.n)}<small>${c.h} цаг</small></div>
+      <div class="bar"><i class="one" data-w="${(c.gap/mx*100).toFixed(1)}%" style="background:var(--sh1)"></i></div><div class="val">${c.gap}</div></div>`});
+    if(CF.w.length>10&&!S.all.w)h+=`<button class="more" data-all="w">Бүгдийг харах (${CF.w.length})</button>`}
+  h+='</div></div>';
+  return h}
+
+/* ---------- render ---------- */
+function render(focus){
+  document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===S.tab));
+  $('#view').innerHTML=S.tab==='load'?vLoad():S.tab==='room'?vRoom():vCheck();
+  anim();
+  if(focus){const q=$('#q');if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}}}
+document.addEventListener('click',e=>{const b=e.target.closest('button,[data-t]');if(!b)return;
+  const d=b.dataset;
+  if(d.tab){S.tab=d.tab;S.open=-1;return render()}
+  if(d.all){S.all[d.all]=true;return render()}
+  if(d.t!==undefined){S.open=S.open===+d.t?-1:+d.t;return render()}});
+document.addEventListener('input',e=>{if(e.target.id==='q'){S.q=e.target.value;S.open=-1;render(true)}});
+document.addEventListener('change',e=>{const t=e.target;
+  if(t.id==='sort'){S.sort=t.value;render()}
+  else if(t.id==='fd'){S.day=+t.value;render()}
+  else if(t.id==='fp'){S.per=+t.value;render()}});
+(async()=>{try{
+  const r=await fetch('schedule.json?v='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;
+  const j=await r.json();
+  if(!j||!Array.isArray(j.L)||!Array.isArray(j.teachers)||!Array.isArray(j.periods)||j.L.some(l=>!Array.isArray(l)))throw 0;
+  D=j;build();
+  $('#sub').textContent=(D.title||'Хичээлийн хуваарь')+(D.updated?' · шинэчилсэн '+D.updated:'');
+  render()}catch(e){
+  $('#view').innerHTML='<div class="card emptymsg">Хичээлийн хуваарь олдсонгүй.<br>«📅 Хуваарь» хэсгийн админаас aSc XML файлаа оруулж нийтэлсний дараа энд шинжилгээ харагдана.</div>'}})();
+</script>
+</body>
+</html>
